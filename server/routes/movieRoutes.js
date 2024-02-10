@@ -3,21 +3,18 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-const options = {
-  method: 'GET',
-  url: `${process.env.TMDB_BASE_URL}/movie/now_playing?api_key=${process.env.TMDB_API_KEY}`,
-  headers: {
-    accept: 'application/json',
+router.get('/', async (req, res) => {
+  try {
+    const movies = await axios.get(`${process.env.TMDB_BASE_URL}/movie/now_playing`, {
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+      },
+    });
+    res.json(movies.data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-};
-
-axios
-  .request(options)
-  .then(function (response) {
-    console.log(response.data);
-  })
-  .catch(function (error) {
-    console.error(error);
-  });
+}
+);
 
 module.exports = router;
