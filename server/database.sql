@@ -4,14 +4,16 @@ CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL
+    password VARCHAR(100) NOT NULL,
+    CONSTRAINT unique_username UNIQUE (username),
+    CONSTRAINT unique_email UNIQUE (email)
 );
 
 CREATE TABLE movies (
     movie_id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     release_date DATE NOT NULL,
-    genres STRING[] NOT NULL,
+    genres TEXT[] NOT NULL,
     overview TEXT NOT NULL,
     runtime INTEGER NOT NULL,
     status VARCHAR(100) NOT NULL,
@@ -25,7 +27,16 @@ CREATE TABLE movies (
 CREATE TABLE user_movies (
     user_movie_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id),
-    movie_id INTEGER REFERENCES movies(movie_id)
+    movie_id INTEGER REFERENCES movies(movie_id),
+    CONSTRAINT unique_user_movies UNIQUE (user_id, movie_id)
+);
+
+CREATE TABLE user_friends (
+    user_friend_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    friend_id INTEGER REFERENCES users(user_id),
+    CONSTRAINT unique_user_friends UNIQUE (user_id, friend_id),
+    CONSTRAINT no_self_friends CHECK (user_id != friend_id)
 );
 
 CREATE TABLE theatres (
@@ -46,10 +57,15 @@ CREATE TABLE showtimes (
 
 CREATE TABLE dates (
     date_id SERIAL PRIMARY KEY,
-    user_id INTEGER[] REFERENCES users(user_id),
-    movie_id INTEGER REFERENCES movies(movie_id),
-    theatre_id INTEGER REFERENCES theatres(theatre_id),
-    date_date DATE NOT NULL,
     showtime_id INTEGER REFERENCES showtimes(showtime_id)
 );
+
+CREATE TABLE user_dates (
+    user_id INTEGER REFERENCES users(user_id),
+    date_id INTEGER REFERENCES dates(date_id),
+    PRIMARY KEY (user_id, date_id)
+);
+
+CREATE INDEX username_index ON users (username);
+CREATE INDEX title_index ON movies (title);
 ```
