@@ -5,7 +5,7 @@ const axios = require('axios');
 
 router.get('/', async (req, res) => {
   try {
-    const movies = await axios.get(`${process.env.TMDB_BASE_URL}/movie/866398`, {
+    const movies = await axios.get(`${process.env.TMDB_BASE_URL}/movie/upcoming`, {
       params: {
         api_key: process.env.TMDB_API_KEY,
       },
