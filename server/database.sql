@@ -10,7 +10,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE movies (
-    movie_id SERIAL PRIMARY KEY,
+    movie_id INTEGER PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     original_title VARCHAR(100) NOT NULL,
     original_language VARCHAR(2) NOT NULL,

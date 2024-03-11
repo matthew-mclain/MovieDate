@@ -2,9 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const pool = require('../db');
 
-// Upcoming movies
-router.get('/', async (req, res) => {
+// Populate the database with upcoming movies
+router.post('/populate', async (req, res) => {
   try {
     const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
     const oneYearFromNow = new Date();
@@ -37,12 +38,43 @@ router.get('/', async (req, res) => {
       page++;
     }
 
+    // Insert movies into the database if they don't already exist
+    const client = await pool.connect();
+    await client.query('BEGIN');
+
+    await Promise.all(allMovies.map(async (movie) => {
+      const { id } = movie;
+
+      // Check if the movie already exists in the database
+      const existingMovie = await client.query('SELECT movie_id FROM movies WHERE movie_id = $1', [id]);
+
+      if (existingMovie.rows.length === 0) {
+        const { title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity } = movie;
+        await client.query('INSERT INTO movies (movie_id, title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id, title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity]);
+      }
+    }));
+
+    await client.query('COMMIT');
+    client.release();
+
     res.json(allMovies);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
+// Get upcoming movies
+router.get('/', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM movies');
+    client.release();
+    const movies = result.rows;
+    res.json(movies);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch upcoming movies from the database: ' + error.message });
+  }
+});
 
 //Individual movie
 router.get('/:id', async (req, res) => {
