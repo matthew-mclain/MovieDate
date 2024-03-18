@@ -113,7 +113,23 @@ router.get('/:id', async (req, res) => {
     const movieDetails = response.data;
     res.json(movieDetails);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: 'Failed to get movie from the database: ' + error.message });
+  }
+});
+
+// Delete movies if release date is a year old
+router.delete('/delete', async (req, res) => {
+  try {
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const oneYearAgoDate = oneYearAgo.toISOString().split('T')[0]; // Get date one year ago in YYYY-MM-DD format
+
+    const client = await pool.connect();
+    await client.query('DELETE FROM movies WHERE release_date < $1', [oneYearAgoDate]);
+    client.release();
+    res.json({ message: 'Movies released over a year ago have been deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete old movies from the database: ' + error.message });
   }
 });
 
