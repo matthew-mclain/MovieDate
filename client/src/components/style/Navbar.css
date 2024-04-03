@@ -1,0 +1,7 @@
+.bg-body-tertiary {
+    background-color: #282c34 !important;
+}
+
+.bg-body-tertiary .navbar-brand {
+    color: white;
+}

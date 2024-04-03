@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #282c34;
 }
 
 .App-logo {
@@ -34,4 +35,33 @@
     --bs-btn-active-bg: #ff4f3e;
     --bs-btn-active-border-color: #fce193;
   }
+}
+
+.App-form {
+  width: 100%;
+  max-width: 350px;
+  padding: 15px;
+  margin-bottom: 500px;
+}
+
+.App-form .form-group {
+  margin-bottom: 15px;
+}
+
+.App-form .form-control {
+  background-color: #313640;
+  color: white;
+  border-color: #999;
+}
+
+.App-form .form-control::placeholder {
+  color: #999;
+}
+
+.App-paragraph {
+  font-size: 20px;
+}
+
+.App-paragraph a {
+  color: #999;
 }
