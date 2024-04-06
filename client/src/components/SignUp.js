@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './style/Home.css';
 import MovieDateNavbar from './Navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 
 function SignUp() {
     const navigate = useNavigate();
@@ -49,8 +50,8 @@ function SignUp() {
         <div className="App">
             <MovieDateNavbar />
             <header className="App-header">
+                {signupSuccess && <Alert variant="success" className="App-alert">{'Sign up successful! Redirecting to sign in page...'}</Alert>}
                 <h2>Sign Up</h2>
-                {signupSuccess && <p className="App-paragraph">Sign up successful! Redirecting to sign in page...</p>}
                 <form className="App-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <input type="email" id="email" name="email" className="form-control" placeholder="Email" value={formData.email} onChange={handleChange} />

@@ -1,12 +1,25 @@
 // Home.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import popcorn from './icons/popcorn.svg';
 import './style/Home.css';
 import MovieDateNavbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate();
+
+    useEffect(() => {
+        // Check if the user is signed in by looking for the token in localStorage
+        const isAuthenticated = !!localStorage.getItem('token');
+
+        // If the user is signed in, redirect to the dashboard
+        if (isAuthenticated) {
+            navigate('/dashboard');
+        }
+    }, [navigate]);
+
   return (
     <div className="App">
       <MovieDateNavbar />
@@ -24,7 +37,7 @@ function Home() {
         </div>
       </header>
     </div>
-  );
+  )
 }
 
 export default Home;
