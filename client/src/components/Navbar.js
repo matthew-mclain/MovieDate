@@ -47,7 +47,7 @@ function MovieDateNavbar() {
                             {username}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => navigate('/profile')}>View Profile</Dropdown.Item>
+                            <Dropdown.Item onClick={() => navigate(`/${username}`)}>View Profile</Dropdown.Item>
                             <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
