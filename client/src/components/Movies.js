@@ -1,23 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Card, Container } from 'react-bootstrap';
-import './style/Home.css';
-import './style/Dashboard.css';
+import React, { useEffect, useState } from 'react';
 import MovieDateNavbar from './Navbar';
+import { Card } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import './style/Movies.css';
 
-function Dashboard() {
-    const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+function Movies() {
     const [movies, setMovies] = useState([]);
-
-    // Retrieve username from localStorage
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-    }, []);
 
     // Format date function
     const formatDate = (dateString) => {
@@ -33,11 +21,7 @@ function Dashboard() {
         const fetchMovies = async () => {
           try {
             const response = await axios.get('http://localhost:5000/movies/upcoming');
-            const slicedMovies = response.data.slice(0, 7).map(movie => ({
-                ...movie,
-                release_date: formatDate(movie.release_date),
-            }));
-            setMovies(slicedMovies);
+            setMovies(response.data);
           } catch (error) {
             console.error('Error fetching movies:', error);
           }
@@ -50,15 +34,12 @@ function Dashboard() {
         <div className="App">
             <MovieDateNavbar />
             <header className="App-header">
-                <h2>Welcome back, {username} </h2>
+                <h2>Movies</h2>
                 <br></br>
-                <Link to="/movies" className="Dashboard-link">
-                    <h3 className="Dashboard-header">Upcoming Movies</h3>
-                </Link>
-                <div className="Dashboard-card">
+                <div className="Movies-grid">
                     {movies.map(movie => (
                         movie.poster_path && (
-                            <Card key={movie.movie_id} className="Dashboard-card" style={{ width: '15rem' }}>
+                            <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
                                 <Card.Img variant="top" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
                             </Card>
                         )
@@ -69,4 +50,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Movies;

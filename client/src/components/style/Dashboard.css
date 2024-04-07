@@ -1,0 +1,14 @@
+.Dashboard-header {
+    text-align: left;
+    margin-right: 1610px; /* Adjust margin as needed */
+}
+
+.Dashboard-link {
+    color: white;
+}
+
+.Dashboard-card {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-right: 20px;
+}

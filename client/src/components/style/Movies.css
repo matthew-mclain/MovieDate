@@ -1,0 +1,9 @@
+.Movies-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Change '6' to the number of cards you want per row */
+    gap: 20px; /* Adjust spacing between cards */
+}
+
+.Movies-card {
+    margin-bottom: 20px; /* Adjust spacing between rows */
+}

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import popcorn from './components/icons/popcorn.svg';
 import Home from './components/Home';
@@ -7,6 +8,8 @@ import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
+import Movies from './components/Movies';
+import Calendar from './components/Calendar';
 
 function App() {
   useEffect(() => {
@@ -31,6 +34,8 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/:username" element={<Profile />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/:username/calendar" element={<Calendar />} />
       </Routes>
     </Router>
   );
