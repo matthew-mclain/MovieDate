@@ -5,9 +5,14 @@ function Calendar() {
     return (
         <div className="App">
             <MovieDateNavbar />
-            <header className="App-header">
-                <h2>Calendar</h2>
-            </header>
+            <div className="container">
+                <div className="d-flex align-items-center">
+                    <header className="App-header">
+                        <br></br>
+                        <h1>Calendar</h1>
+                    </header>
+                </div>
+            </div>    
         </div>
     );
 }

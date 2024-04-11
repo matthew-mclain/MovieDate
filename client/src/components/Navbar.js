@@ -45,21 +45,25 @@ function MovieDateNavbar() {
                     <PopcornIcon className="d-inline-block align-top" width="30" height="30"/>
                     MovieDate
                 </Navbar.Brand>
-                <Nav className="me-auto">
-                    <Nav.Link onClick={handleMoviesClick} style={{ color: 'white' }}>Movies</Nav.Link> {/* Add Movies */}
-                    <Nav.Link onClick={handleCalendarClick} style={{ color: 'white' }}>My Calendar</Nav.Link> {/* Add My Calendar */}
-                </Nav>
-                <Form className="d-flex">
-                    <Form.Control
-                        type="search"
-                        placeholder="Find a Movie..."
-                        className="me-2 search-input"
-                        aria-label="Search"
-                    />
-                    <Button variant="outline-danger" className="me-4">
-                        <SearchIcon className="nav-icons" width="15" height="15"/>
-                    </Button>
-                </Form>
+                {localStorage.getItem('token') && (
+                    <Nav className="me-auto">
+                        <Nav.Link onClick={handleMoviesClick} style={{ color: 'white' }}>Movies</Nav.Link> {/* Add Movies */}
+                        <Nav.Link onClick={handleCalendarClick} style={{ color: 'white' }}>My Calendar</Nav.Link> {/* Add My Calendar */}
+                    </Nav>
+                )}
+                {localStorage.getItem('token') && (
+                    <Form className="d-flex">
+                        <Form.Control
+                            type="search"
+                            placeholder="Search Movies..."
+                            className="me-2 search-input"
+                            aria-label="Search"
+                        />
+                        <Button variant="outline-danger" className="me-4">
+                            <SearchIcon className="nav-icons" width="15" height="15"/>
+                        </Button>
+                    </Form>
+                )}
                 {localStorage.getItem('token') && (
                     <Dropdown as={ButtonGroup}>
                         <Dropdown.Toggle variant="outline-light" id="dropdown-basic" className="nav-icons">

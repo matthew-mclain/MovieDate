@@ -46,11 +46,11 @@ function SignIn() {
     }
 
     return (
-        <div className="App">
+        <div className="App-start">
             <MovieDateNavbar />
-            <header className="App-header">
+            <header className="App-header-start">
                 {error && <Alert variant="danger" className="App-alert">{error}</Alert>}
-                <h2>Sign In</h2>
+                <h1>Sign In</h1>
                 <form className="App-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <input type="text" id="username" name="username" className="form-control" placeholder="Username" value={formData.username} onChange={handleChange}/>
@@ -58,7 +58,7 @@ function SignIn() {
                     <div className="form-group">
                         <input type="password" id="password" name="password" className="form-control" placeholder="Password" value={formData.password} onChange={handleChange}/>
                     </div>
-                    <Button type="submit" className="App-button" size="lg">
+                    <Button type="submit" className="App-button">
                         Sign In
                     </Button>
                 </form>

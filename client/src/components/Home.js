@@ -23,7 +23,7 @@ function Home() {
   return (
     <div className="App">
       <MovieDateNavbar />
-      <header className="App-header">
+      <header className="App-header-start">
         <img src={popcorn} className="App-logo" alt="logo" />
         <h1>MovieDate</h1>
         <p><small>Movie Planning Starts Here</small></p>

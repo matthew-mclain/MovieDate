@@ -1,4 +1,12 @@
 .App {
+  text-align: left;
+  background-color: #282c34;
+  min-height: 100vh; /* Set minimum height to fill the viewport */
+  display: flex;
+  flex-direction: column;
+}
+
+.App-start {
   text-align: center;
   background-color: #282c34;
   min-height: 100vh; /* Set minimum height to fill the viewport */
@@ -12,6 +20,16 @@
 }
 
 .App-header {
+  background-color: #282c34;
+  flex-grow: 1; /* Make the header grow to fill the remaining space */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-header-start {
   background-color: #282c34;
   flex-grow: 1; /* Make the header grow to fill the remaining space */
   display: flex;

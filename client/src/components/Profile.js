@@ -20,10 +20,15 @@ function Profile() {
     return (
         <div className="App">
             <MovieDateNavbar />
-            <header className="App-header">
-                <h2>{profileUsername}</h2>
-                {isCurrentUser && <Button className="App-button">Edit Profile</Button>}
-            </header>
+            <div className="container">
+                <div className="d-flex align-items-center">
+                    <header className="App-header">
+                        <br></br>
+                        <h1>{profileUsername}</h1>
+                        {isCurrentUser && <Button className="App-button">Edit Profile</Button>}
+                    </header>
+                </div>
+            </div>    
         </div>
     );
 }

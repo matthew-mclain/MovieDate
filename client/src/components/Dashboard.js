@@ -68,39 +68,45 @@ function Dashboard() {
     return (
         <div className="App">
             <MovieDateNavbar />
-            <header className="App-header">
-                <br></br>
-                <h2>Welcome back, {username} </h2>
-                <br></br>
-                <Link to="/movies" className="Dashboard-link">
-                    <h3 className="Dashboard-header-1">Upcoming</h3>
-                </Link>
-                <div className="Dashboard-card">
-                    {upcomingMovies.map(movie => (
-                        movie.poster_path && (
-                            <Card key={movie.movie_id} className="Dashboard-card" style={{ width: '15rem' }}>
-                                <Link to={`/movies/${movie.movie_id}`}>
-                                    <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
-                                </Link>
-                            </Card>
-                        )
-                    ))}
+            <div className="container">
+                <div className="d-flex align-items-center">
+                    <header className="App-header">
+                        <br></br>
+                        <h1>Welcome back, {username} </h1>
+                        <br></br>
+                        <Link to="/movies" className="Dashboard-link">
+                            <h2 className="Dashboard-header-1">Upcoming</h2>
+                        </Link>
+                        <div className="Dashboard-card">
+                            {upcomingMovies.map(movie => (
+                                movie.poster_path && (
+                                    <Card key={movie.movie_id} className="Dashboard-card" style={{ width: '15rem' }}>
+                                        <Link to={`/movies/${movie.movie_id}`}>
+                                            <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                        </Link>
+                                    </Card>
+                                )
+                            ))}
+                        </div>
+                        <br></br>
+                        <Link to="/movies" className="Dashboard-link">
+                            <h2 className="Dashboard-header-2">Now Playing</h2>
+                        </Link>
+                        <div className="Dashboard-card">
+                            {nowPlayingMovies.map(movie => (
+                                movie.poster_path && (
+                                    <Card key={movie.movie_id} className="Dashboard-card" style={{ width: '15rem' }}>
+                                        <Link to={`/movies/${movie.movie_id}`}>
+                                            <Card.Img variant="top" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                        </Link>
+                                    </Card>
+                                )
+                            ))}
+                        </div>
+                        <br></br>
+                    </header>
                 </div>
-                <br></br>
-                <Link to="/movies" className="Dashboard-link">
-                    <h3 className="Dashboard-header-2">Now Playing</h3>
-                </Link>
-                <div className="Dashboard-card">
-                    {nowPlayingMovies.map(movie => (
-                        movie.poster_path && (
-                            <Card key={movie.movie_id} className="Dashboard-card" style={{ width: '15rem' }}>
-                                <Card.Img variant="top" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
-                            </Card>
-                        )
-                    ))}
-                </div>
-                <br></br>
-            </header>
+            </div>
         </div>
     );
 }

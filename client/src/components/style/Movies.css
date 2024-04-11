@@ -1,13 +1,3 @@
-.Movies-header {
-    text-align: left;
-    margin-right: 1180px;
-}
-
-.Movies-div {
-    text-align: left;
-    margin-right: 1122px;
-}
-
 .Movies-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -21,9 +11,21 @@
 
 .Movies-card .card-img {
     border: 1px solid white;
+    width: 100%;
 }
 
 .Movies-card .card-text {
     color: white;
     font-size: 15px;
+    text-align: center;
+}
+
+.movie-details {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+}
+
+.details {
+    display: grid;
 }

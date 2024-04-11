@@ -47,11 +47,11 @@ function SignUp() {
     };
  
     return (
-        <div className="App">
+        <div className="App-start">
             <MovieDateNavbar />
-            <header className="App-header">
+            <header className="App-header-start">
                 {signupSuccess && <Alert variant="success" className="App-alert">{'Sign up successful! Redirecting to sign in page...'}</Alert>}
-                <h2>Sign Up</h2>
+                <h1>Sign Up</h1>
                 <form className="App-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <input type="email" id="email" name="email" className="form-control" placeholder="Email" value={formData.email} onChange={handleChange} />
@@ -65,7 +65,7 @@ function SignUp() {
                     <div className="form-group">
                         <input type="password" id="confirmPassword" name="confirmPassword" className="form-control" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} />
                     </div>
-                    <Button type="submit" className="App-button" size="lg">
+                    <Button type="submit" className="App-button">
                         Sign Up
                     </Button>
                 </form>
