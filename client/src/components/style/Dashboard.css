@@ -1,6 +1,11 @@
-.Dashboard-header {
+.Dashboard-header-1 {
     text-align: left;
-    margin-right: 1610px; /* Adjust margin as needed */
+    margin-right: 1445px; /* Adjust margin as needed */
+}
+
+.Dashboard-header-2 {
+    text-align: left;
+    margin-right: 1418px; /* Adjust margin as needed */
 }
 
 .Dashboard-link {

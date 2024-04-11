@@ -100,6 +100,20 @@ router.get('/upcoming', async (req, res) => {
     }
 });
 
+// Get now playing movies
+router.get('/now_playing', async (req, res) => {
+    try {
+        const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM movies WHERE release_date <= $1 ORDER BY popularity DESC', [currentDate]);
+        client.release();
+        const movies = result.rows;
+        res.json(movies);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch now playing movies from the database: ' + error.message });
+    }
+});
+
 // Get individual movie
 router.get('/:id', async (req, res) => {
     try {
@@ -117,17 +131,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Delete movies if release date is a year old
+// Delete movies if release date is six months old
 router.delete('/delete', async (req, res) => {
     try {
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        const oneYearAgoDate = oneYearAgo.toISOString().split('T')[0]; // Get date one year ago in YYYY-MM-DD format
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+        const sixMonthsAgoDate = sixMonthsAgo.toISOString().split('T')[0]; // Get date six months ago in YYYY-MM-DD format
 
         const client = await pool.connect();
-        await client.query('DELETE FROM movies WHERE release_date < $1', [oneYearAgoDate]);
+        await client.query('DELETE FROM movies WHERE release_date < $1', [sixMonthsAgoDate]);
         client.release();
-        res.json({ message: 'Movies released over a year ago have been deleted' });
+        res.json({ message: 'Movies released over a six months ago have been deleted' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete old movies from the database: ' + error.message });
     }

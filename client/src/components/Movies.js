@@ -34,13 +34,19 @@ function Movies() {
         <div className="App">
             <MovieDateNavbar />
             <header className="App-header">
+                <br></br>
                 <h2>Movies</h2>
                 <br></br>
                 <div className="Movies-grid">
                     {movies.map(movie => (
                         movie.poster_path && (
                             <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
-                                <Card.Img variant="top" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                <Card.Body>
+                                    <Card.Text className="card-text">
+                                        {formatDate(movie.release_date)}
+                                    </Card.Text>
+                                </Card.Body>
                             </Card>
                         )
                     ))}
