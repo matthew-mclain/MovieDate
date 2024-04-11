@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Movies from './components/Movies';
 import Calendar from './components/Calendar';
+import MovieDetail from './components/MovieDetail';
 
 function App() {
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/:username" element={<Profile />} />
         <Route path="/movies" element={<Movies />} />
+        <Route path="/movies/:id" element={<MovieDetail />} />
         <Route path="/:username/calendar" element={<Calendar />} />
       </Routes>
     </Router>

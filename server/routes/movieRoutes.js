@@ -86,6 +86,28 @@ router.post('/populate', async (req, res) => {
     }
 });
 
+// Get all movies
+router.get('/', async (req, res) => {
+    try {
+        const { sortBy, sortOrder } = req.query;
+
+        let query = 'SELECT * FROM movies';
+        if (sortBy && sortOrder) {
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
+        }
+    
+        const client = await pool.connect();
+        const result = await client.query(query);
+        client.release();
+
+        const movies = result.rows;
+        res.json(movies);
+        console.log('Movies fetched from the database with query:', query);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch movies from the database: ' + error.message });
+    }
+});
+
 // Get upcoming movies
 router.get('/upcoming', async (req, res) => {
     try {

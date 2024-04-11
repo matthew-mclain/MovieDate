@@ -5,3 +5,8 @@
 .bg-body-tertiary .navbar-brand {
     color: white;
 }
+
+.user-dropdown {
+    display: flex;
+    align-items: center;
+}

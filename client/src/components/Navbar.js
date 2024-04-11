@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Container, Dropdown, ButtonGroup, Nav } from 'react-bootstrap';
-import popcorn from './icons/popcorn.svg';
+import { ReactComponent as PopcornIcon } from './icons/popcorn.svg';
+import { ReactComponent as UserIcon } from './icons/user.svg';
 import './style/Navbar.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,13 +41,7 @@ function MovieDateNavbar() {
         <Navbar className="bg-body-tertiary">
             <Container>
                 <Navbar.Brand onClick={handleRedirect} className="App-navbar">
-                    <img
-                        alt=""
-                        src={popcorn}
-                        width="30"
-                        height="30"
-                        className="d-inline-block align-top"
-                    />{' '}
+                    <PopcornIcon className="d-inline-block align-top" width="30" height="30"/>
                     MovieDate
                 </Navbar.Brand>
                 <Nav className="me-auto">
@@ -55,7 +50,8 @@ function MovieDateNavbar() {
                 </Nav>
                 {localStorage.getItem('token') && (
                     <Dropdown as={ButtonGroup}>
-                        <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
+                        <Dropdown.Toggle variant="outline-light" id="dropdown-basic" className="user-dropdown">
+                            <UserIcon className="d-inline-block align-top" width="20" height="20" style={{marginRight: '5px'}}/>
                             {username}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
