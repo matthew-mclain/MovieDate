@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Container, Dropdown, ButtonGroup, Nav } from 'react-bootstrap';
+import { Navbar, Container, Dropdown, Button, ButtonGroup, Nav, Form } from 'react-bootstrap';
 import { ReactComponent as PopcornIcon } from './icons/popcorn.svg';
 import { ReactComponent as UserIcon } from './icons/user.svg';
+import { ReactComponent as SearchIcon } from './icons/search.svg';
 import './style/Navbar.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -48,9 +49,20 @@ function MovieDateNavbar() {
                     <Nav.Link onClick={handleMoviesClick} style={{ color: 'white' }}>Movies</Nav.Link> {/* Add Movies */}
                     <Nav.Link onClick={handleCalendarClick} style={{ color: 'white' }}>My Calendar</Nav.Link> {/* Add My Calendar */}
                 </Nav>
+                <Form className="d-flex">
+                    <Form.Control
+                        type="search"
+                        placeholder="Find a Movie..."
+                        className="me-2 search-input"
+                        aria-label="Search"
+                    />
+                    <Button variant="outline-danger" className="me-4">
+                        <SearchIcon className="nav-icons" width="15" height="15"/>
+                    </Button>
+                </Form>
                 {localStorage.getItem('token') && (
                     <Dropdown as={ButtonGroup}>
-                        <Dropdown.Toggle variant="outline-light" id="dropdown-basic" className="user-dropdown">
+                        <Dropdown.Toggle variant="outline-light" id="dropdown-basic" className="nav-icons">
                             <UserIcon className="d-inline-block align-top" width="20" height="20" style={{marginRight: '5px'}}/>
                             {username}
                         </Dropdown.Toggle>

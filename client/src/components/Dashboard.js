@@ -34,7 +34,7 @@ function Dashboard() {
         const fetchUpcomingMovies = async () => {
           try {
             const response = await axios.get('http://localhost:5000/movies/upcoming');
-            const slicedUpcomingMovies = response.data.slice(0, 6).map(movie => ({
+            const slicedUpcomingMovies = response.data.slice(0, 5).map(movie => ({
                 ...movie,
                 release_date: formatDate(movie.release_date),
             }));
@@ -52,7 +52,7 @@ function Dashboard() {
         const fetchNowPlayingMovies = async () => {
           try {
             const response = await axios.get('http://localhost:5000/movies/now_playing');
-            const slicedNowPlayingMovies = response.data.slice(0, 6).map(movie => ({
+            const slicedNowPlayingMovies = response.data.slice(0, 5).map(movie => ({
                 ...movie,
                 release_date: formatDate(movie.release_date),
             }));
@@ -79,7 +79,9 @@ function Dashboard() {
                     {upcomingMovies.map(movie => (
                         movie.poster_path && (
                             <Card key={movie.movie_id} className="Dashboard-card" style={{ width: '15rem' }}>
-                                <Card.Img variant="top" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                <Link to={`/movies/${movie.movie_id}`}>
+                                    <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                </Link>
                             </Card>
                         )
                     ))}

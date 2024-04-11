@@ -6,7 +6,23 @@
     color: white;
 }
 
-.user-dropdown {
+.nav-icons {
     display: flex;
     align-items: center;
+}
+
+.search-input {
+    width: 200px;
+    background-color: #313640;
+    color: #fff;
+}
+
+.search-input::placeholder {
+    color: #ccc;
+}
+
+.search-input:focus {
+    background-color: #313640;
+    color: #ccc;
+    caret-color: #ccc;
 }

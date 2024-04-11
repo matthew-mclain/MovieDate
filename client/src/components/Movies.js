@@ -57,27 +57,35 @@ function Movies() {
             <MovieDateNavbar />
             <header className="App-header">
                 <br></br>
-                <h2>Movies</h2>
-                <div>
-                <Dropdown>
-                    <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
-                        Sort
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => handleSort('popularity')}>
-                            Popularity {sortBy === 'popularity' && sortOrder === 'asc' && <SortAscIcon />}
-                            {sortBy === 'popularity' && sortOrder === 'desc' && <SortDescIcon />}
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleSort('release_date')}>
-                            Release Date {sortBy === 'release_date' && sortOrder === 'asc' && <SortAscIcon />}
-                            {sortBy === 'release_date' && sortOrder === 'desc' && <SortDescIcon />}
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleSort('title')}>
-                            Title {sortBy === 'title' && sortOrder === 'asc' && <SortAscIcon />}
-                            {sortBy === 'title' && sortOrder === 'desc' && <SortDescIcon />}
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                <h2 className="Movies-header">Movies</h2>
+                <div className="Movies-div d-flex">
+                    <Dropdown>
+                        <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
+                            Sort
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => handleSort('popularity')}>
+                                Popularity {sortBy === 'popularity' && sortOrder === 'asc' && <SortAscIcon />}
+                                {sortBy === 'popularity' && sortOrder === 'desc' && <SortDescIcon />}
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleSort('release_date')}>
+                                Release Date {sortBy === 'release_date' && sortOrder === 'asc' && <SortAscIcon />}
+                                {sortBy === 'release_date' && sortOrder === 'desc' && <SortDescIcon />}
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleSort('title')}>
+                                Title {sortBy === 'title' && sortOrder === 'asc' && <SortAscIcon />}
+                                {sortBy === 'title' && sortOrder === 'desc' && <SortDescIcon />}
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <div className="mx-2"></div>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
+                            Filter
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
                 <br></br>
                 <div className="Movies-grid">
