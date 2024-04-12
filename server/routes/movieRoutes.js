@@ -89,9 +89,24 @@ router.post('/populate', async (req, res) => {
 // Get all movies
 router.get('/', async (req, res) => {
     try {
-        const { sortBy, sortOrder } = req.query;
+        const { sortBy, sortOrder, selectedFilters } = req.query;
 
         let query = 'SELECT * FROM movies';
+
+        // Add filters to the query
+        if (selectedFilters && selectedFilters.length > 0) {
+            const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+            const filterConditions = selectedFilters.map(filter => {
+                if (filter === 'upcoming') {
+                    return `release_date > '${currentDate}'`;
+                } else if (filter === 'released') {
+                    return `release_date <= '${currentDate}'`;
+                }
+            });
+            query += ` WHERE ${filterConditions.join(' OR ')}`;
+        }
+
+        // Add sorting to the query
         if (sortBy && sortOrder) {
             query += ` ORDER BY ${sortBy} ${sortOrder}`;
         }

@@ -4,6 +4,10 @@
     gap: 20px;
 }
 
+.filter-checkbox-text {
+    margin-left: 8px; /* Adjust spacing as needed */
+}
+
 .Movies-card {
     background-color: #282c34;
     border: none;
@@ -26,6 +30,10 @@
     gap: 20px;
 }
 
-.details {
-    display: grid;
+.details > div {
+    margin-bottom: 20px;
+}
+
+.details > div:nth-child(2) {
+    margin-top: 20px;
 }

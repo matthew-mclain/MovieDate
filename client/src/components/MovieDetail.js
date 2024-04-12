@@ -41,10 +41,14 @@ function MovieDetail() {
                     {movie && (
                         <div className="movie-details">
                             <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
-                                <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                {movie.poster_path ? (
+                                    <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                ) : (
+                                    <Card.Img variant="top" className="card-img" src={'https://via.placeholder.com/446x669.png?text=Poster+Not+Available'} />
+                                )}
                                 <Card.Body>
                                     <div className="text-center">
-                                        <Button className="App-button">Add to Calendar</Button>
+                                        <Button className="App-button">Add to My Calendar</Button>
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -52,15 +56,15 @@ function MovieDetail() {
                                 <h1>{movie.title}</h1>
                                 <div>
                                     <h4>Release Date</h4>
-                                    <h5>{formatDate(movie.release_date)}</h5>
+                                    <i><h5>{formatDate(movie.release_date)}</h5></i>
                                 </div>
                                 <div>
                                     <h4>Genres</h4>
-                                    <h5>{movie.genres.map(genre => genre.name).join(', ')}</h5>
+                                    <i><h5>{movie.genres.map(genre => genre.name).join(', ')}</h5></i>
                                 </div>
                                 <div>
                                     <h4>Overview</h4>
-                                    <h5>{movie.overview}</h5>
+                                    <i><h5>{movie.overview}</h5></i>
                                 </div>
                             </div>
                         </div>

@@ -74,8 +74,11 @@ function Dashboard() {
                         <br></br>
                         <h1>Welcome back, {username} </h1>
                         <br></br>
-                        <Link to="/movies" className="Dashboard-link">
-                            <h2 className="Dashboard-header-1">Upcoming</h2>
+                        <Link 
+                            to={"/movies"}
+                            state={{ filterOption: 'upcoming' }}
+                            className="Dashboard-link">
+                            <h2>Upcoming</h2>
                         </Link>
                         <div className="Dashboard-card">
                             {upcomingMovies.map(movie => (
@@ -89,8 +92,11 @@ function Dashboard() {
                             ))}
                         </div>
                         <br></br>
-                        <Link to="/movies" className="Dashboard-link">
-                            <h2 className="Dashboard-header-2">Now Playing</h2>
+                        <Link 
+                            to={"/movies"}
+                            state={{ filterOption: 'released' }}
+                            className="Dashboard-link">
+                            <h2>Now Playing</h2>
                         </Link>
                         <div className="Dashboard-card">
                             {nowPlayingMovies.map(movie => (
