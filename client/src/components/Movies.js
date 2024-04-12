@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import MovieDateNavbar from './Navbar';
-import { Card, Button, Dropdown } from 'react-bootstrap';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Card, Dropdown } from 'react-bootstrap';
+import { useLocation, Link } from 'react-router-dom';
 import { ReactComponent as SortAscIcon } from './icons/asc.svg';
 import { ReactComponent as SortDescIcon } from './icons/desc.svg';
 import axios from 'axios';
 import './style/Movies.css';
 
 function Movies() {
-    const location = useLocation();
-    const [filterOption, setFilterOption] = useState(location.state ? location.state.filterOption : null);
     const [movies, setMovies] = useState([]);
     const [sortBy, setSortBy] = useState('popularity'); // Default sort by popularity
     const [sortOrder, setSortOrder] = useState('desc'); // Default sort order is descending
@@ -24,13 +22,6 @@ function Movies() {
         });
     };
 
-    // Apply initial filter based on location.state.filterOption
-    useEffect(() => {
-        if (filterOption) {
-            setSelectedFilters([filterOption]); // Set the selected filter
-        }
-    }, [filterOption]);
-
     // Retrieve movies from the database
     useEffect(() => {
         const fetchMovies = async () => {
@@ -39,13 +30,10 @@ function Movies() {
                     params: {
                         sortBy,
                         sortOrder,
-                        selectedFilters: filterOption ? [filterOption] : selectedFilters
+                        selectedFilters
                     }
                 });
                 setMovies(response.data);
-                if (filterOption) {
-                    setFilterOption(null);
-                }
             } catch (error) {
                 console.error('Error fetching movies:', error);
             }

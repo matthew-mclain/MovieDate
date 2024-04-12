@@ -9,24 +9,22 @@ router.post('/add', async (req, res) => {
     try {
         const { username, movieId } = req.body;
 
-        // Retrieve the user's ID
+        // Check if movie is already in user's calendar
         const client = await pool.connect();
-        let result = await client.query(
-            'SELECT user_id FROM users WHERE username = $1',
-            [username]
+        const result = await client.query(
+            'SELECT EXISTS(SELECT 1 FROM user_movies WHERE user_id = (SELECT user_id FROM users WHERE username = $1) AND movie_id = $2)',
+            [username, movieId]
         );
 
-        if (result.rows.length === 0) {
+        if (result.rows[0].exists) {
             client.release();
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(400).json({ error: 'Movie already exists in the user\'s calendar' });
         }
 
-        const userId = result.rows[0].user_id; // Extract user_id from the result
-
         // Insert the movie into the user's calendar
-        result = await client.query(
-            'INSERT INTO user_movies (user_id, movie_id) VALUES ($1, $2)',
-            [userId, movieId]
+        await client.query(
+            'INSERT INTO user_movies (user_id, movie_id) VALUES ((SELECT user_id FROM users WHERE username = $1), $2)',
+            [username, movieId]
         );
         client.release();
 
@@ -38,6 +36,27 @@ router.post('/add', async (req, res) => {
 });
 
 // Get user's calendar
+router.get('/', async (req, res) => {
+    try {
+        const { username, movieId } = req.query;
+
+        // Retrieve the user's ID
+        const client = await pool.connect();
+        const result = await client.query(
+            'SELECT EXISTS(SELECT 1 FROM user_movies WHERE user_id = (SELECT user_id FROM users WHERE username = $1) AND movie_id = $2)',
+            [username, movieId]
+        );
+
+        client.release();
+
+        const exists = result.rows[0].exists; // Extract exists value from the result
+
+        res.json({ exists });
+    } catch (error) {
+        console.error('Error fetching user calendar:', error);
+        res.status(500).json({ error: 'Failed to fetch user calendar' });
+    }
+});
 
 // Delete movie from user's calendar
 

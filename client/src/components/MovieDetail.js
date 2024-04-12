@@ -8,6 +8,7 @@ import './style/Movies.css';
 function MovieDetail() {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
+    const [movieInCalendar, setMovieInCalendar] = useState(false);
 
     // Format date function
     const formatDate = (dateString) => {
@@ -37,17 +38,41 @@ function MovieDetail() {
         try {
             // Get username from localStorage
             const username = localStorage.getItem('username');
-            
+
             const response = await axios.post('http://localhost:5000/calendar/add', {
                 username: username,
                 movieId: movie.id,
             });
             console.log(response.data);
-            alert('Movie added to calendar!');
+            setMovieInCalendar(true);
         } catch (error) {
             console.error('Error adding movie to calendar:', error);
         }
     };
+
+    // Check if movie is in calendar
+    useEffect(() => {
+        const checkMovieInCalendar = async () => {
+            try {
+                const username = localStorage.getItem('username');
+                const movieId = id;
+
+                const response = await axios.get('http://localhost:5000/calendar', {
+                    params: {
+                        username: username,
+                        movieId: movieId,
+                    }
+                });
+                const isInCalendar = response.data.exists;
+                setMovieInCalendar(isInCalendar);
+                console.log('Movie is in calendar:', isInCalendar);
+            } catch (error) {
+                console.error('Error checking if movie is in calendar:', error);
+            }
+        };
+
+        checkMovieInCalendar();
+    }, [id]);
 
     return (
         <div className="App">
@@ -65,7 +90,17 @@ function MovieDetail() {
                                 )}
                                 <Card.Body>
                                     <div className="text-center">
-                                        <Button className="App-button" onClick={addToCalendar}>Add to My Calendar</Button>
+                                        <Button 
+                                            className="App-button" 
+                                            onClick={addToCalendar}
+                                            disabled={movieInCalendar}
+                                            style={{ 
+                                                backgroundColor: movieInCalendar ? 'grey' : undefined,
+                                                borderColor: movieInCalendar ? 'white' : undefined
+                                            }}
+                                        >
+                                        {movieInCalendar ? 'In Calendar' : 'Add to Calendar'}
+                                        </Button>
                                     </div>
                                 </Card.Body>
                             </Card>

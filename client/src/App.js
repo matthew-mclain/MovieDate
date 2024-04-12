@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import popcorn from './components/icons/popcorn.svg';
 import Home from './components/Home';
