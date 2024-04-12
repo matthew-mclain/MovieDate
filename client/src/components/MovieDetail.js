@@ -32,6 +32,23 @@ function MovieDetail() {
         fetchMovie();
     }, [id]);
 
+    // Add movie to calendar
+    const addToCalendar = async () => {
+        try {
+            // Get username from localStorage
+            const username = localStorage.getItem('username');
+            
+            const response = await axios.post('http://localhost:5000/calendar/add', {
+                username: username,
+                movieId: movie.id,
+            });
+            console.log(response.data);
+            alert('Movie added to calendar!');
+        } catch (error) {
+            console.error('Error adding movie to calendar:', error);
+        }
+    };
+
     return (
         <div className="App">
             <MovieDateNavbar />
@@ -48,7 +65,7 @@ function MovieDetail() {
                                 )}
                                 <Card.Body>
                                     <div className="text-center">
-                                        <Button className="App-button">Add to My Calendar</Button>
+                                        <Button className="App-button" onClick={addToCalendar}>Add to My Calendar</Button>
                                     </div>
                                 </Card.Body>
                             </Card>

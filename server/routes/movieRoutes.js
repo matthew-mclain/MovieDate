@@ -26,7 +26,7 @@ const genreMap = {
     37: 'Western'
 };
 
-// Populate the database with upcoming movies, update them if they already exist
+// Populate the movies table in the database with upcoming movies, update them if they already exist
 router.post('/populate', async (req, res) => {
     try {
         const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
@@ -128,7 +128,7 @@ router.get('/upcoming', async (req, res) => {
     try {
         const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
         const client = await pool.connect();
-        const result = await client.query('SELECT * FROM movies WHERE release_date >= $1 ORDER BY popularity DESC', [currentDate]);
+        const result = await client.query('SELECT * FROM movies WHERE release_date > $1 ORDER BY popularity DESC', [currentDate]);
         client.release();
         const movies = result.rows;
         res.json(movies);

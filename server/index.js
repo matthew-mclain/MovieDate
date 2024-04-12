@@ -12,6 +12,7 @@ app.use(express.json());
 // Routes
 app.use('/movies', require('./routes/movieRoutes'));
 app.use('/users', require('./routes/userRoutes'));
+app.use('/calendar', require('./routes/calendarRoutes'));
 
 // Update the database with upcoming movies
 const updateMovies = async () => {
