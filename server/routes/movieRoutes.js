@@ -151,20 +151,16 @@ router.get('/now_playing', async (req, res) => {
     }
 });
 
-// Get individual movie
+// Get individual movie from database
 router.get('/:id', async (req, res) => {
     try {
-        const movieId = req.params.id;
-        const params = {
-            api_key: process.env.TMDB_API_KEY
-        };
-
-        const response = await axios.get(`${process.env.TMDB_BASE_URL}/movie/${movieId}`, { params });
-
-        const movieDetails = response.data;
-        res.json(movieDetails);
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM movies WHERE movie_id = $1', [req.params.id]);
+        client.release();
+        const movie = result.rows[0];
+        res.json(movie);
     } catch (error) {
-        res.status(400).json({ error: 'Failed to get movie from the database: ' + error.message });
+        res.status(500).json({ error: 'Failed to fetch movie from the database: ' + error.message });
     }
 });
 

@@ -84,7 +84,7 @@ function MovieDetail() {
                         <div className="movie-details">
                             <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
                                 {movie.poster_path ? (
-                                    <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
+                                    <Card.Img variant="top" className="card-img" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
                                 ) : (
                                     <Card.Img variant="top" className="card-img" src={'https://via.placeholder.com/446x669.png?text=Poster+Not+Available'} />
                                 )}
