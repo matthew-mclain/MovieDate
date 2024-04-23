@@ -59,5 +59,23 @@ router.get('/', async (req, res) => {
 });
 
 // Delete movie from user's calendar
+router.delete('/delete', async (req, res) => {
+    try {
+        const { username, movieId } = req.body;
+
+        // Delete the movie from the user's calendar
+        const client = await pool.connect();
+        await client.query(
+            'DELETE FROM user_movies WHERE user_id = (SELECT user_id FROM users WHERE username = $1) AND movie_id = $2',
+            [username, movieId]
+        );
+        client.release();
+
+        res.json({ message: 'Movie deleted from calendar successfully' });
+    } catch (error) {
+        console.error('Error deleting movie from calendar:', error);
+        res.status(500).json({ error: 'Failed to delete movie from calendar' });
+    }
+});
 
 module.exports = router;

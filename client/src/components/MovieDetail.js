@@ -41,12 +41,31 @@ function MovieDetail() {
 
             const response = await axios.post('http://localhost:5000/calendar/add', {
                 username: username,
-                movieId: movie.id,
+                movieId: movie.movie_id,
             });
             console.log(response.data);
             setMovieInCalendar(true);
         } catch (error) {
             console.error('Error adding movie to calendar:', error);
+        }
+    };
+
+    // Delete movie from calendar
+    const deleteFromCalendar = async () => {
+        try {
+            // Get username from localStorage
+            const username = localStorage.getItem('username');
+
+            const response = await axios.delete('http://localhost:5000/calendar/delete', {
+                data: {
+                    username: username,
+                    movieId: movie.movie_id,
+                }
+            });
+            console.log(response.data);
+            setMovieInCalendar(false);
+        } catch (error) {
+            console.error('Error deleting movie from calendar:', error);
         }
     };
 
@@ -84,23 +103,22 @@ function MovieDetail() {
                         <div className="movie-details">
                             <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
                                 {movie.poster_path ? (
-                                    <Card.Img variant="top" className="card-img" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+                                    <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + movie.poster_path} />
                                 ) : (
                                     <Card.Img variant="top" className="card-img" src={'https://via.placeholder.com/446x669.png?text=Poster+Not+Available'} />
                                 )}
                                 <Card.Body>
                                     <div className="text-center">
-                                        <Button 
-                                            className="App-button" 
-                                            onClick={addToCalendar}
-                                            disabled={movieInCalendar}
-                                            style={{ 
-                                                backgroundColor: movieInCalendar ? 'grey' : undefined,
-                                                borderColor: movieInCalendar ? 'white' : undefined
-                                            }}
-                                        >
-                                        {movieInCalendar ? 'In Calendar' : 'Add to Calendar'}
-                                        </Button>
+                                    <Button 
+                                        className="App-button" 
+                                        onClick={movieInCalendar ? deleteFromCalendar : addToCalendar}
+                                        style={{ 
+                                            backgroundColor: movieInCalendar ? 'grey' : undefined,
+                                            borderColor: movieInCalendar ? 'white' : undefined
+                                        }}
+                                    >
+                                        {movieInCalendar ? 'Remove from Calendar' : 'Add to Calendar'}
+                                    </Button>
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -112,7 +130,7 @@ function MovieDetail() {
                                 </div>
                                 <div>
                                     <h4>Genres</h4>
-                                    <i><h5>{movie.genres.map(genre => genre.name).join(', ')}</h5></i>
+                                    <i><h5>{movie.genres.join(', ')}</h5></i>
                                 </div>
                                 <div>
                                     <h4>Overview</h4>
