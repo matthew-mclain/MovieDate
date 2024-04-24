@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Container } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import './style/Home.css';
 import './style/Dashboard.css';
 import MovieDateNavbar from './Navbar';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Dashboard() {
-    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [upcomingMovies, setUpcomingMovies] = useState([]);
     const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
@@ -75,7 +74,7 @@ function Dashboard() {
                         <h1>Welcome back, {username} </h1>
                         <br></br>
                         <Link 
-                            to={"/movies"}
+                            to={"/movies?filter=upcoming"}
                             state={{ filterOption: 'upcoming' }}
                             className="Dashboard-link">
                             <h2>Upcoming</h2>
@@ -93,7 +92,7 @@ function Dashboard() {
                         </div>
                         <br></br>
                         <Link 
-                            to={"/movies"}
+                            to={"/movies?filter=released"}
                             state={{ filterOption: 'released' }}
                             className="Dashboard-link">
                             <h2>Now Playing</h2>

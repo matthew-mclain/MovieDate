@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import MovieDateNavbar from './Navbar';
 import { Card, Dropdown } from 'react-bootstrap';
-import { useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ReactComponent as SortAscIcon } from './icons/asc.svg';
 import { ReactComponent as SortDescIcon } from './icons/desc.svg';
 import axios from 'axios';
@@ -12,6 +12,9 @@ function Movies() {
     const [sortBy, setSortBy] = useState('popularity'); // Default sort by popularity
     const [sortOrder, setSortOrder] = useState('desc'); // Default sort order is descending
     const [selectedFilters, setSelectedFilters] = useState([]);
+    const [isFilterReady, setIsFilterReady] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
     
     // Format date function
     const formatDate = (dateString) => {
@@ -21,26 +24,6 @@ function Movies() {
             year: 'numeric',
         });
     };
-
-    // Retrieve movies from the database
-    useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/movies/', {
-                    params: {
-                        sortBy,
-                        sortOrder,
-                        selectedFilters
-                    }
-                });
-                setMovies(response.data);
-            } catch (error) {
-                console.error('Error fetching movies:', error);
-            }
-        };
-
-        fetchMovies();
-    }, [sortBy, sortOrder, selectedFilters]);
 
     // Handle sorting movies
     const handleSort = (sortOption) => {
@@ -56,16 +39,54 @@ function Movies() {
 
     // Handle filtering movies
     const handleFilter = (filterOption) => {
-        let newSelectedFilters = [];
-        if (selectedFilters.includes(filterOption)) {
-            // If the clicked filter is already selected, deselect it
-            newSelectedFilters = selectedFilters.filter(filter => filter !== filterOption);
+        // Deselect the other filter if it's selected
+        const newSelectedFilter = selectedFilters.includes(filterOption) ? [] : [filterOption];
+
+        // Update URL with query parameters or navigate to /movies if no filter is selected
+        if (newSelectedFilter.length > 0) {
+            const params = new URLSearchParams(location.search);
+            params.set('filter', newSelectedFilter[0]); // Set the selected filter in the URL
+            navigate(`?${params.toString()}`);
         } else {
-            // Otherwise, select the clicked filter and deselect the other one
-            newSelectedFilters = [filterOption];
+            navigate('/movies');
         }
-        setSelectedFilters(newSelectedFilters);
+
+        setSelectedFilters(newSelectedFilter);
     };
+
+    // Parse query parameters from the URL and apply filters if not already applied
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const filter = params.get('filter');
+
+        if (filter) {
+            setSelectedFilters([filter]);
+        }
+        setIsFilterReady(true);
+    }, [location.search]);
+
+    // Retrieve movies from the database
+    useEffect(() => {
+        // Check if the filter is ready before fetching movies
+        if (isFilterReady) {
+            const fetchMovies = async () => {
+                try {
+                    const response = await axios.get('http://localhost:5000/movies/', {
+                        params: {
+                            sortBy,
+                            sortOrder,
+                            selectedFilters
+                        }
+                    });
+                    setMovies(response.data);
+                } catch (error) {
+                    console.error('Error fetching movies:', error);
+                }
+            };
+
+            fetchMovies();
+        }
+    }, [isFilterReady, sortBy, sortOrder, selectedFilters]);
 
     return (
         <div className="App">
