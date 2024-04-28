@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import './style/Home.css';
+import React, { useEffect, useState } from 'react';
 import MovieDateNavbar from './Navbar';
-import { Card, Button } from 'react-bootstrap';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Card, Dropdown } from 'react-bootstrap';
+import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import './style/Home.css';
 
 function Calendar() {
     const { username } = useParams(); // Retrieve the username from the URL parameter
     const [profileUsername, setProfileUsername] = useState(username); // Store the username in state
     const [movies, setMovies] = useState([]); // State to store the user's movies
+    const [selectedFilters, setSelectedFilters] = useState([]);
+    const [isFilterReady, setIsFilterReady] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const storedUsername = localStorage.getItem('username'); // Retrieve the username from localStorage
     const isCurrentUser = storedUsername === profileUsername; // Check if the current user is viewing their own profile
@@ -22,6 +26,34 @@ function Calendar() {
         });
     };
 
+    // Handle filtering movies
+    const handleFilter = (filterOption) => {
+        // Deselect the other filter if it's selected
+        const newSelectedFilter = selectedFilters.includes(filterOption) ? [] : [filterOption];
+
+        // Update URL with query parameters or navigate to /movies if no filter is selected
+        if (newSelectedFilter.length > 0) {
+            const params = new URLSearchParams(location.search);
+            params.set('filter', newSelectedFilter[0]); // Set the selected filter in the URL
+            navigate(`?${params.toString()}`);
+        } else {
+            navigate(`/${profileUsername}/calendar`);
+        }
+
+        setSelectedFilters(newSelectedFilter);
+    };
+
+    // Parse query parameters from the URL and apply filters if not already applied
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const filter = params.get('filter');
+
+        if (filter) {
+            setSelectedFilters([filter]);
+        }
+        setIsFilterReady(true);
+    }, [location.search]);
+
     // Set the profile username to the username from the URL parameter
     useEffect(() => {
         setProfileUsername(username);
@@ -30,17 +62,25 @@ function Calendar() {
     // Get user's calendar
     useEffect(() => {
         // Function to get the user's calendar
-        const getCalendar = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/calendar?username=${profileUsername}`);
-                setMovies(response.data);
-                console.log('Success fetching user calendar:', response.data);
-            } catch (error) {
-                console.error('Error fetching user calendar:', error);
-            }
-        };
-        getCalendar();
-    }, [profileUsername]);
+        if (isFilterReady) {
+            const getCalendar = async () => {
+                try {
+                    const response = await axios.get('http://localhost:5000/calendar', {
+                        params: {
+                            username: profileUsername,
+                            selectedFilters: selectedFilters,
+                        },
+                    });
+                    setMovies(response.data);
+                    console.log('Success fetching user calendar:', response.data);
+                } catch (error) {
+                    console.error('Error fetching user calendar:', error);
+                }
+            };
+
+            getCalendar();
+        }
+    }, [profileUsername, selectedFilters, isFilterReady]);
 
     return (
         <div className="App">
@@ -50,6 +90,43 @@ function Calendar() {
                     <header className="App-header">
                         <br></br>
                         {isCurrentUser ? <h1>My Calendar</h1> : <h1>{profileUsername}'s Calendar</h1>}
+                        <div className="d-flex">
+                            <Dropdown>
+                                <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
+                                    Filter
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item>
+                                        <div className="d-flex align-items-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters.includes('upcoming')}
+                                                onChange={() => handleFilter('upcoming')}
+                                                onClick={(e) => e.stopPropagation()} // Stop propagation here
+                                                className='mr-2'
+                                            />
+                                            <label className="filter-checkbox-text" onClick={() => handleFilter('upcoming')}>
+                                                Upcoming
+                                            </label>
+                                        </div>
+                                    </Dropdown.Item>
+                                    <Dropdown.Item>
+                                        <div className="d-flex align-items-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFilters.includes('released')}
+                                                onChange={() => handleFilter('released')}
+                                                onClick={(e) => e.stopPropagation()} // Stop propagation here
+                                                className='mr-2'
+                                            />
+                                            <label className="filter-checkbox-text" onClick={() => handleFilter('released')}>
+                                                Released
+                                            </label>
+                                        </div>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
                         <br></br>
                         <div className="Movies-grid">
                             {movies.map(movie => (

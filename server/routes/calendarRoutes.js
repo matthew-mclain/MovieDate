@@ -38,10 +38,11 @@ router.post('/add', async (req, res) => {
 // Get user's calendar
 router.get('/', async (req, res) => {
     try {
-        const { username } = req.query;
+        const { username, selectedFilters } = req.query;
+
+        const client = await pool.connect();
 
         // Retrieve the user's ID from their username
-        const client = await pool.connect();
         const result = await client.query(
             'SELECT user_id FROM users WHERE username = $1',
             [username]
@@ -55,14 +56,28 @@ router.get('/', async (req, res) => {
         );
         const movieIds = userMovies.rows.map(movie => movie.movie_id);
 
+        let query = 'SELECT * FROM movies WHERE movie_id = $1';
+
+        // Add filters to the query
+        if (selectedFilters && selectedFilters.length > 0) {
+            const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+            const filterConditions = selectedFilters.map(filter => {
+                if (filter === 'upcoming') {
+                    return `release_date > '${currentDate}'`;
+                } else if (filter === 'released') {
+                    return `release_date <= '${currentDate}'`;
+                }
+            });
+            query += ` AND ${filterConditions.join(' OR ')}`;
+        }
+
         // Retrieve the movies from the movies table with the movie_ids
         const movies = [];
         for (const movieId of movieIds) {
-            const movie = await client.query(
-                'SELECT * FROM movies WHERE movie_id = $1',
-                [movieId]
-            );
-            movies.push(movie.rows[0]);
+            const movie = await client.query(query, [movieId]);
+            if (movie.rows.length > 0) { // Check if movie exists based on the filter conditions
+                movies.push(movie.rows[0]);
+            }
         }
 
         // Sort the movies by release date
