@@ -74,15 +74,8 @@ function MovieDetail() {
         const checkMovieInCalendar = async () => {
             try {
                 const username = localStorage.getItem('username');
-                const movieId = id;
-
-                const response = await axios.get('http://localhost:5000/calendar', {
-                    params: {
-                        username: username,
-                        movieId: movieId,
-                    }
-                });
-                const isInCalendar = response.data.exists;
+                const response = await axios.get(`http://localhost:5000/calendar?username=${username}`);
+                const isInCalendar = response.data.some(movie => movie.movie_id === parseInt(id));
                 setMovieInCalendar(isInCalendar);
                 console.log('Movie is in calendar:', isInCalendar);
             } catch (error) {

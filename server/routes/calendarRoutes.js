@@ -38,23 +38,42 @@ router.post('/add', async (req, res) => {
 // Get user's calendar
 router.get('/', async (req, res) => {
     try {
-        const { username, movieId } = req.query;
+        const { username } = req.query;
 
-        // Retrieve the user's ID
+        // Retrieve the user's ID from their username
         const client = await pool.connect();
         const result = await client.query(
-            'SELECT EXISTS(SELECT 1 FROM user_movies WHERE user_id = (SELECT user_id FROM users WHERE username = $1) AND movie_id = $2)',
-            [username, movieId]
+            'SELECT user_id FROM users WHERE username = $1',
+            [username]
         );
+        const userId = result.rows[0].user_id;
+
+        // Retrieve the movie_ids from the user_movies table with the user's ID
+        const userMovies = await client.query(
+            'SELECT movie_id FROM user_movies WHERE user_id = $1',
+            [userId]
+        );
+        const movieIds = userMovies.rows.map(movie => movie.movie_id);
+
+        // Retrieve the movies from the movies table with the movie_ids
+        const movies = [];
+        for (const movieId of movieIds) {
+            const movie = await client.query(
+                'SELECT * FROM movies WHERE movie_id = $1',
+                [movieId]
+            );
+            movies.push(movie.rows[0]);
+        }
+
+        // Sort the movies by release date
+        movies.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
 
         client.release();
 
-        const exists = result.rows[0].exists; // Extract exists value from the result
-
-        res.json({ exists });
+        res.json(movies);
     } catch (error) {
-        console.error('Error fetching user calendar:', error);
-        res.status(500).json({ error: 'Failed to fetch user calendar' });
+        console.error('Error fetching user\'s calendar:', error);
+        res.status(500).json({ error: 'Failed to fetch user\'s calendar' });
     }
 });
 
