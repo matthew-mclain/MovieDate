@@ -8,11 +8,23 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 function Profile() {
     const { username } = useParams(); // Retrieve the username from the URL parameter
-    const [profileUsername, setProfileUsername] = useState(username); // Store the username in state
-    const [movies, setMovies] = useState([]); // State to store the user's movies
+    const [profileUsername, setProfileUsername] = useState(username);
+    const [movies, setMovies] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [hovered, setHovered] = useState(false);
+    const [following, setFollowing] = useState([]);
+    const [followers, setFollowers] = useState([]);
 
     const storedUsername = localStorage.getItem('username'); // Retrieve the username from localStorage
     const isCurrentUser = storedUsername === profileUsername; // Check if the current user is viewing their own profile
+
+    const handleMouseEnter = () => {
+        setHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setHovered(false);
+    };
 
     // Get user's calendar
     useEffect(() => {
@@ -34,6 +46,97 @@ function Profile() {
         getCalendar();
     }, [profileUsername]);
 
+    // Follow user (add to user_friends table)
+    const followUser = async () => {
+        try {
+            const response = await axios.post('http://localhost:5000/users/follow', {
+                username: storedUsername,
+                friendUsername: profileUsername,
+            });
+            console.log(response.data);
+            setIsFollowing(true);
+        } catch (error) {
+            console.error('Error following user:', error);
+        }
+    };
+
+    // Unfollow user (remove from user_friends table)
+    const unfollowUser = async () => {
+        try {
+            const response = await axios.post('http://localhost:5000/users/unfollow', {
+                username: storedUsername,
+                friendUsername: profileUsername,
+            });
+            console.log(response.data);
+            setIsFollowing(false);
+        } catch (error) {
+            console.error('Error unfollowing user:', error);
+        }
+    };
+
+    // Get the user's following list
+    useEffect(() => {
+        const getFollowing = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/users/following', {
+                    params: {
+                        username: profileUsername,
+                    },
+                });
+                console.log('Following:', response.data)
+                setFollowing(response.data);
+            } catch (error) {
+                console.error('Error getting following list:', error);
+            }
+        }
+        getFollowing();
+    }, [profileUsername]);
+
+    // Get the user's followers list
+    useEffect(() => {
+        const getFollowers = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/users/followers', {
+                    params: {
+                        username: profileUsername,
+                    },
+                });
+                console.log('Followers:', response.data)
+                setFollowers(response.data);
+            } catch (error) {
+                console.error('Error getting followers list:', error);
+            }
+        }
+        getFollowers();
+    }, [profileUsername]);
+
+    // Check if the current user is following the profile user
+    const checkFollowingStatus = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/users/is_following', {
+                params: {
+                    username: storedUsername,
+                    friendUsername: profileUsername,
+                },
+            });
+            console.log('Is following:', response.data);
+            setIsFollowing(response.data);
+        } catch (error) {
+            console.error('Error checking following status:', error);
+        }
+    };
+
+    // Update profileUsername state when the URL parameter changes
+    useEffect(() => {
+        setProfileUsername(username);
+    }, [username]);
+
+    useEffect(() => {
+        if (!isCurrentUser) {
+            checkFollowingStatus(); // Fetch following status whenever profileUsername or storedUsername changes
+        }
+    }, [profileUsername, storedUsername, isCurrentUser]);
+
     return (
         <div className="App">
             <MovieDateNavbar />
@@ -43,8 +146,24 @@ function Profile() {
                         <br></br>
                         <h1>{profileUsername}</h1>
                         {isCurrentUser && <Button className="App-button">Edit Profile</Button>}
-                        {!isCurrentUser && <Button className="App-button">Follow</Button>}
+                        {!isCurrentUser && (
+                        <Button 
+                            className="App-button"
+                            onClick={isFollowing ? unfollowUser : followUser}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            style={{ 
+                                backgroundColor: isFollowing && !hovered ? 'grey' : undefined,
+                                borderColor: isFollowing && !hovered ? 'white' : undefined
+                            }}
+                            >
+                            {isFollowing ? (hovered ? 'Unfollow' : 'Following') : 'Follow'}
+                        </Button>
+                        )}
                         <br></br>
+                        <br></br>
+                        <h3>Followers: {followers.length}</h3>
+                        <h3>Following: {following.length}</h3>
                         <br></br>
                         <Link 
                             to={`/${profileUsername}/calendar`}
