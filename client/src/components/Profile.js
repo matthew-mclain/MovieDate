@@ -26,6 +26,7 @@ function Profile() {
                         <br></br>
                         <h1>{profileUsername}</h1>
                         {isCurrentUser && <Button className="App-button">Edit Profile</Button>}
+                        {!isCurrentUser && <Button className="App-button">Follow</Button>}
                     </header>
                 </div>
             </div>    

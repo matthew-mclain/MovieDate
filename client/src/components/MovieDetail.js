@@ -9,6 +9,7 @@ function MovieDetail() {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [movieInCalendar, setMovieInCalendar] = useState(false);
+    const [hovered, setHovered] = useState(false);
 
     // Format date function
     const formatDate = (dateString) => {
@@ -17,6 +18,14 @@ function MovieDetail() {
             day: 'numeric',
             year: 'numeric',
         });
+    };
+
+    const handleMouseEnter = () => {
+        setHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setHovered(false);
     };
 
     // Retrieve movie details from the database
@@ -105,12 +114,14 @@ function MovieDetail() {
                                     <Button 
                                         className="App-button" 
                                         onClick={movieInCalendar ? deleteFromCalendar : addToCalendar}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
                                         style={{ 
-                                            backgroundColor: movieInCalendar ? 'grey' : undefined,
-                                            borderColor: movieInCalendar ? 'white' : undefined
+                                            backgroundColor: movieInCalendar && !hovered ? 'grey' : undefined,
+                                            borderColor: movieInCalendar && !hovered ? 'white' : undefined
                                         }}
                                     >
-                                        {movieInCalendar ? 'Remove from Calendar' : 'Add to Calendar'}
+                                        {movieInCalendar ? (hovered ? 'Remove From Calendar' : 'In Calendar') : 'Add to Calendar'}
                                     </Button>
                                     </div>
                                 </Card.Body>
