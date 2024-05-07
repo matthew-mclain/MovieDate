@@ -26,3 +26,13 @@
     color: #ccc;
     caret-color: #ccc;
 }
+
+.custom-list-item {
+    background-color: #313640;
+    color: white;
+}
+
+.custom-active-list-item {
+    background-color: #999;
+    color: white;
+}
