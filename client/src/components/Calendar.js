@@ -142,7 +142,7 @@ function Calendar() {
                         <header className="App-header">
                             <br></br>
                             {isCurrentUser ? <h1>My Calendar</h1> : <h1>{profileUsername}'s Calendar</h1>}
-                            <br></br>
+                            {movies.length === 0 && <br></br>}
                             {movies.length === 0 ? <h3>No movies in the calendar</h3> : null}
                             {movies.length > 0 && <div className="d-flex">
                                 <Dropdown>
