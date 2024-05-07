@@ -42,6 +42,18 @@ router.get('/', async (req, res) => {
 
         const client = await pool.connect();
 
+        // Check if the user exists
+        const userExistsQuery = await client.query(
+            'SELECT EXISTS(SELECT 1 FROM users WHERE username = $1)',
+            [username]
+        );
+        const userExists = userExistsQuery.rows[0].exists;
+
+        if (!userExists) {
+            client.release();
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         // Retrieve the user's ID from their username
         const result = await client.query(
             'SELECT user_id FROM users WHERE username = $1',

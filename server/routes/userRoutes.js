@@ -107,11 +107,13 @@ router.get('/following', async (req, res) => {
         // Check if the user is following the friend
         const client = await pool.connect();
         const result = await client.query(
-            'SELECT * FROM user_friends WHERE user_id = (SELECT user_id FROM users WHERE username = $1)',
+            `SELECT u.username 
+             FROM users u 
+             JOIN user_friends uf ON u.user_id = uf.friend_id 
+             WHERE uf.user_id = (SELECT user_id FROM users WHERE username = $1)`,
             [username]
         );
         client.release();
-        console.log('Following:', result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error('Error checking following status:', error);
@@ -127,11 +129,13 @@ router.get('/followers', async (req, res) => {
         // Check if the friend is following the user
         const client = await pool.connect();
         const result = await client.query(
-            'SELECT * FROM user_friends WHERE friend_id = (SELECT user_id FROM users WHERE username = $1)',
+            `SELECT u.username 
+             FROM users u 
+             JOIN user_friends uf ON u.user_id = uf.user_id 
+             WHERE uf.friend_id = (SELECT user_id FROM users WHERE username = $1)`,
             [username]
         );
         client.release();
-        console.log('Followers:', result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error('Error checking followers status:', error);
@@ -156,6 +160,30 @@ router.get('/is_following', async (req, res) => {
     } catch (error) {
         console.error('Error checking following status:', error);
         res.status(500).json({ error: 'Failed to check following status' });
+    }
+});
+
+// Check if the user exists
+router.get('/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        // Retrieve the user from the database
+        const client = await pool.connect();
+        const result = await client.query(
+            'SELECT * FROM users WHERE username = $1',
+            [username]
+        );
+        client.release();
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        } else {
+            res.json(result.rows[0]);
+        }
+    } catch (error) {
+        console.error('Error getting user:', error);
+        res.status(500).json({ error: 'Failed to get user' });
     }
 });
 

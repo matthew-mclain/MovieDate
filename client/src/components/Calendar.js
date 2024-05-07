@@ -8,6 +8,8 @@ import './style/Home.css';
 function Calendar() {
     const { username } = useParams(); // Retrieve the username from the URL parameter
     const [profileUsername, setProfileUsername] = useState(username); // Store the username in state
+    const [userExists, setUserExists] = useState(true); // Check if the user exists in the database
+    const [isLoading, setIsLoading] = useState(true); // Check if the page is loading
     const [movies, setMovies] = useState([]); // State to store the user's movies
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [isFilterReady, setIsFilterReady] = useState(false);
@@ -16,6 +18,27 @@ function Calendar() {
 
     const storedUsername = localStorage.getItem('username'); // Retrieve the username from localStorage
     const isCurrentUser = storedUsername === profileUsername; // Check if the current user is viewing their own profile
+
+    // Check if the user exists
+    useEffect(() => {
+        const checkUserExists = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/users/${profileUsername}`);
+                console.log('User:', response.data);
+            } catch (error) {
+                console.error('User does not exist:', error);
+                setUserExists(false);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        checkUserExists();
+    }, [profileUsername]);
+
+    // Log userExists after it has been updated
+    useEffect(() => {
+        console.log('User exists:', userExists);
+    }, [userExists]);
 
     // Format date function
     const formatDate = (dateString) => {
@@ -82,77 +105,109 @@ function Calendar() {
         }
     }, [profileUsername, selectedFilters, isFilterReady]);
 
-    return (
-        <div className="App">
-            <MovieDateNavbar />
-            <div className="container">
-                <div className="d-flex align-items-center">
+    if (isLoading) {
+        return (
+            <div className="App">
+                <MovieDateNavbar />
+                <div className="container">
                     <header className="App-header">
                         <br></br>
-                        {isCurrentUser ? <h1>My Calendar</h1> : <h1>{profileUsername}'s Calendar</h1>}
-                        <div className="d-flex">
-                            <Dropdown>
-                                <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
-                                    Filter
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item>
-                                        <div className="d-flex align-items-center">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedFilters.includes('upcoming')}
-                                                onChange={() => handleFilter('upcoming')}
-                                                onClick={(e) => e.stopPropagation()} // Stop propagation here
-                                                className='mr-2'
-                                            />
-                                            <label className="filter-checkbox-text" onClick={() => handleFilter('upcoming')}>
-                                                Upcoming
-                                            </label>
-                                        </div>
-                                    </Dropdown.Item>
-                                    <Dropdown.Item>
-                                        <div className="d-flex align-items-center">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedFilters.includes('released')}
-                                                onChange={() => handleFilter('released')}
-                                                onClick={(e) => e.stopPropagation()} // Stop propagation here
-                                                className='mr-2'
-                                            />
-                                            <label className="filter-checkbox-text" onClick={() => handleFilter('released')}>
-                                                Released
-                                            </label>
-                                        </div>
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
-                        <br></br>
-                        <div className="Movies-grid">
-                            {movies.map(movie => (
-                                <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
-                                    <Link to={`/movies/${movie.movie_id}`}>
-                                        {movie.poster_path ? (
-                                            <Card.Img variant="top" className="card-img" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
-                                        ) : (
-                                            <Card.Img variant="top" className="card-img" src={'https://via.placeholder.com/446x669.png?text=Poster+Not+Available'} />
-                                        )}
-                                    </Link>
-                                    <Card.Body>
-                                        <Card.Text className="card-text">
-                                            <b>{movie.title}</b>
-                                            <br />
-                                            <i>{formatDate(movie.release_date)}</i>
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            ))}
-                        </div>
+                        <h1>Loading...</h1>
                     </header>
                 </div>
-            </div>    
-        </div>
-    );
+            </div>
+        );
+    }
+
+    else if (!userExists) {
+        return (
+            <div className="App">
+                <MovieDateNavbar />
+                <div className="container">
+                    <header className="App-header">
+                        <br></br>
+                        <h1>User not found</h1>
+                    </header>
+                </div>
+            </div>
+        );
+    }
+
+    else {
+        return (
+            <div className="App">
+                <MovieDateNavbar />
+                <div className="container">
+                    <div className="d-flex align-items-center">
+                        <header className="App-header">
+                            <br></br>
+                            {isCurrentUser ? <h1>My Calendar</h1> : <h1>{profileUsername}'s Calendar</h1>}
+                            <br></br>
+                            {movies.length === 0 ? <h3>No movies in the calendar</h3> : null}
+                            {movies.length > 0 && <div className="d-flex">
+                                <Dropdown>
+                                    <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
+                                        Filter
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item>
+                                            <div className="d-flex align-items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedFilters.includes('upcoming')}
+                                                    onChange={() => handleFilter('upcoming')}
+                                                    onClick={(e) => e.stopPropagation()} // Stop propagation here
+                                                    className='mr-2'
+                                                />
+                                                <label className="filter-checkbox-text" onClick={() => handleFilter('upcoming')}>
+                                                    Upcoming
+                                                </label>
+                                            </div>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item>
+                                            <div className="d-flex align-items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedFilters.includes('released')}
+                                                    onChange={() => handleFilter('released')}
+                                                    onClick={(e) => e.stopPropagation()} // Stop propagation here
+                                                    className='mr-2'
+                                                />
+                                                <label className="filter-checkbox-text" onClick={() => handleFilter('released')}>
+                                                    Released
+                                                </label>
+                                            </div>
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </div>}
+                            <br></br>
+                            <div className="Movies-grid">
+                                {movies.map(movie => (
+                                    <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
+                                        <Link to={`/movies/${movie.movie_id}`}>
+                                            {movie.poster_path ? (
+                                                <Card.Img variant="top" className="card-img" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+                                            ) : (
+                                                <Card.Img variant="top" className="card-img" src={'https://via.placeholder.com/446x669.png?text=Poster+Not+Available'} />
+                                            )}
+                                        </Link>
+                                        <Card.Body>
+                                            <Card.Text className="card-text">
+                                                <b>{movie.title}</b>
+                                                <br />
+                                                <i>{formatDate(movie.release_date)}</i>
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                ))}
+                            </div>
+                        </header>
+                    </div>
+                </div>    
+            </div>
+        );
+    }
 }
 
 export default Calendar;
