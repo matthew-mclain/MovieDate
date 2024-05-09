@@ -132,6 +132,9 @@ function MovieDetail() {
 
     // Render showtimes dynamically based on the selected date
     const renderShowtimes = () => {
+        if (!showtimesData) {
+            return <h3>No showtimes available</h3>;
+        }
         return (
             <div>
                 {showtimesData && showtimesData.cinemas.map(cinema => (
