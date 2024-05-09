@@ -14,6 +14,7 @@ app.use('/movies', require('./routes/movieRoutes'));
 app.use('/users', require('./routes/userRoutes'));
 app.use('/calendar', require('./routes/calendarRoutes'));
 app.use('/search', require('./routes/searchRoutes'));
+app.use('/showtimes', require('./routes/showtimeRoutes'));
 
 // Update the database with upcoming movies
 const updateMovies = async () => {
