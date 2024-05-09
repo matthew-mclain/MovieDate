@@ -37,3 +37,22 @@
 .details > div:nth-child(2) {
     margin-top: 20px;
 }
+
+.date-picker {
+    background-color: #313640;
+    border: 1px solid white;
+    border-radius: 5px;
+    width: 135px;
+    color: white;
+    font-size: 25px;
+}
+
+.showtimes-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.showtime {
+    margin-right: 10px;
+    white-space: nowrap;
+}
