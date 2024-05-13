@@ -40,25 +40,14 @@ CREATE TABLE user_friends (
     CONSTRAINT no_self_friends CHECK (user_id != friend_id)
 );
 
-CREATE TABLE theatres (
-    theatre_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    address VARCHAR(100) NOT NULL,
-    city VARCHAR(100) NOT NULL,
-    state VARCHAR(100) NOT NULL,
-    zip_code VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE showtimes (
-    showtime_id SERIAL PRIMARY KEY,
-    movie_id INTEGER REFERENCES movies(movie_id) ON DELETE CASCADE,
-    theatre_id INTEGER REFERENCES theatres(theatre_id) ON DELETE CASCADE,
-    showtime TIMESTAMP NOT NULL
-);
-
 CREATE TABLE dates (
     date_id SERIAL PRIMARY KEY,
-    showtime_id INTEGER REFERENCES showtimes(showtime_id) ON DELETE CASCADE
+    date_movie_id INTEGER REFERENCES movies(movie_id) ON DELETE CASCADE,
+    date_user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    date_date DATE NOT NULL,
+    date_time TIME,
+    date_location VARCHAR(100),
+    date_invited_users INTEGER[]
 );
 
 CREATE TABLE user_dates (
