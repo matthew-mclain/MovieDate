@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MovieDateNavbar from './Navbar';
 import { Card, Button } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './style/Movies.css';
 
@@ -12,9 +10,6 @@ function MovieDetail() {
     const [movie, setMovie] = useState(null);
     const [movieInCalendar, setMovieInCalendar] = useState(false);
     const [hovered, setHovered] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showtimesData, setShowtimesData] = useState(null);
-
     // Format date function
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -99,59 +94,6 @@ function MovieDetail() {
         checkMovieInCalendar();
     }, [id]);
 
-    // Handle date change
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    }
-
-    // Function to fetch showtimes for the selected date
-    const fetchShowtimes = async () => {
-        try {
-            const response = await axios.get(`http://localhost:5000/showtimes/search`, {
-                params: {
-                    title: movie.title,
-                    releaseDate: movie.release_date,
-                    desiredDate: selectedDate.toISOString().split('T')[0],
-                }
-            });
-            console.log('Showtimes:', response.data);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching showtimes:', error);
-        }
-    }
-
-    // Fetch showtimes when the selected date changes
-    useEffect(() => {
-        const fetchData = async () => {
-            const showtimesData = await fetchShowtimes();
-            setShowtimesData(showtimesData); // Pass the response data to renderShowtimes
-        };
-        fetchData();
-    }, [selectedDate]);
-
-    // Render showtimes dynamically based on the selected date
-    const renderShowtimes = () => {
-        if (!showtimesData) {
-            return <h3>No showtimes available</h3>;
-        }
-        return (
-            <div>
-                {showtimesData && showtimesData.cinemas.map(cinema => (
-                    <div key={cinema.cinema_id}>
-                        <h3>Showtimes:</h3>
-                        <h4>{cinema.cinema_name} ({cinema.distance.toFixed(2)} miles away)</h4>
-                        <div className="showtimes-container">
-                            {cinema.showings.Standard.times.map((time, index) => (
-                                <span key={index} className="showtime">{time.start_time}</span>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
     return (
         <div className="App">
             <MovieDateNavbar />
@@ -197,13 +139,6 @@ function MovieDetail() {
                                     <h4>Overview</h4>
                                     <i><h5>{movie.overview}</h5></i>
                                 </div>
-                            </div>
-                            <div>
-                                <h3>Select Date</h3>
-                                <DatePicker selected={selectedDate} onChange={handleDateChange} className='date-picker'/>
-                                <br></br>
-                                <br></br>
-                                {renderShowtimes()}
                             </div>
                         </div>
                     )}
