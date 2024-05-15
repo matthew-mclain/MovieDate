@@ -4,14 +4,14 @@ import { Card, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './style/Movies.css';
-import DateModal from './AddDateModal';
+import AddDateModal from './AddDateModal';
 
 function MovieDetail() {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [movieInCalendar, setMovieInCalendar] = useState(false);
     const [hovered, setHovered] = useState(false);
-    const [showDateModal, setShowDateModal] = useState(false);
+    const [showAddDateModal, setShowAddDateModal] = useState(false);
 
     // Format date function
     const formatDate = (dateString) => {
@@ -98,8 +98,8 @@ function MovieDetail() {
     }, [id]);
 
      // Event handler to toggle modal visibility
-     const toggleDateModal = () => {
-        setShowDateModal(!showDateModal);
+     const toggleAddDateModal = () => {
+        setShowAddDateModal(!showAddDateModal);
     };
 
 
@@ -132,8 +132,8 @@ function MovieDetail() {
                                         {movieInCalendar ? (hovered ? 'Remove From Calendar' : 'In Calendar') : 'Add to Calendar'}
                                     </Button>
                                     <div>
-                                    <Button className="App-button" onClick={toggleDateModal}>Plan Date</Button>
-                                    <DateModal show={showDateModal} onHide={toggleDateModal} movieId={id}/>
+                                        <Button className="App-button" onClick={toggleAddDateModal}>Plan Date</Button>
+                                        <AddDateModal show={showAddDateModal} onHide={toggleAddDateModal} movieId={id}/>
                                     </div>
                                     </div>
                                 </Card.Body>
