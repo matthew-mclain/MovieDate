@@ -47,7 +47,7 @@ CREATE TABLE dates (
     date DATE NOT NULL,
     time TIME,
     theater VARCHAR(100),
-    invited_users INTEGER[]
+    invited_users VARCHAR(100)[]
 );
 
 -- CREATE TABLE user_dates (

@@ -37,31 +37,27 @@ router.get('/', async (req, res) => {
     const { username, selectedFilters } = req.query;
 
     try {
-        const user = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
-
-        if (user.rows.length === 0) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        const userId = user.rows[0].user_id;
-
-        let query = 'SELECT dates.*, movies.poster_path FROM dates JOIN movies ON dates.movie_id = movies.movie_id';
+        let query = `
+            SELECT dates.*, movies.poster_path 
+            FROM dates 
+            JOIN movies ON dates.movie_id = movies.movie_id`;
 
         // Add filters to the query
         if (selectedFilters && selectedFilters.length > 0) {
             const filterConditions = selectedFilters.map(filter => {
                 if (filter === 'me') {
-                    return 'user_id = $1'
+                    return 'user_id = (SELECT user_id FROM users WHERE username = $1)';
                 } else if (filter === 'others') {
-                    return '$1 = ANY(invited_users)'
+                    // Check if the provided username exists in the invited_users array
+                    return '$1 = ANY(dates.invited_users)';
                 }
             });
             query += ' WHERE ' + filterConditions.join(' OR ');
         } else {
-            query += ' WHERE user_id = $1 OR $1 = ANY(invited_users)';
+            query += ' WHERE user_id = (SELECT user_id FROM users WHERE username = $1) OR $1 = ANY(dates.invited_users)';
         }
 
-        const dates = await pool.query(query, [userId]);
+        const dates = await pool.query(query, [username]);
         res.json(dates.rows);
         console.log(query);
         console.log(dates.rows);
@@ -70,5 +66,6 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Failed to get dates' });
     }
 });
+
 
 module.exports = router;

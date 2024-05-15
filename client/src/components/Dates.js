@@ -205,7 +205,8 @@ function Dates() {
                                                     </div>
                                                 </Card.Body>
                                             </Card>
-                                        </Link>                                        
+                                        </Link>
+                                        <Button className='App-button' style={{ marginBottom: '25px' }}>Manage</Button>                                        
                                         <h5><u>Date</u>:</h5>
                                         <h6><i>{formatDate(date.date)}</i></h6>
 
@@ -217,8 +218,6 @@ function Dates() {
 
                                         <h5><u>Invited Users:</u></h5>
                                         <h6><i>{date.invited_users.join(', ') || 'None'}</i></h6>
-
-                                        <Button className='App-button' style={{ marginBottom: '25px' }}>Manage</Button>
                                     </div>
                                 ))}
                             </div>

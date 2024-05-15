@@ -226,7 +226,7 @@ function Profile() {
                             <br></br>
                             <h4 onClick={() => toggleModal(followers, 'Followers')} style={{ cursor: 'pointer', textDecoration: 'underline' }}>Followers: {followers.length}</h4>
                             <h4 onClick={() => toggleModal(following, 'Following')} style={{ cursor: 'pointer', textDecoration: 'underline' }}>Following: {following.length}</h4>
-                            <UserListModal show={showModal} onHide={toggleModal} users={modalUsers} title={modalTitle} />
+                            <UserListModal show={showModal} onHide={toggleModal} users={modalUsers} title={modalTitle} isProfileModal={true} />
                             <br></br>
                             <Link 
                                 to={`/${profileUsername}/calendar`}

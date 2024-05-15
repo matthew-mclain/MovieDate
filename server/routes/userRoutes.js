@@ -107,7 +107,7 @@ router.get('/following', async (req, res) => {
         // Check if the user is following the friend
         const client = await pool.connect();
         const result = await client.query(
-            `SELECT u.username 
+            `SELECT u.user_id, u.username 
              FROM users u 
              JOIN user_friends uf ON u.user_id = uf.friend_id 
              WHERE uf.user_id = (SELECT user_id FROM users WHERE username = $1)`,
@@ -129,7 +129,7 @@ router.get('/followers', async (req, res) => {
         // Check if the friend is following the user
         const client = await pool.connect();
         const result = await client.query(
-            `SELECT u.username 
+            `SELECT u.user_id, u.username 
              FROM users u 
              JOIN user_friends uf ON u.user_id = uf.user_id 
              WHERE uf.friend_id = (SELECT user_id FROM users WHERE username = $1)`,
@@ -173,6 +173,30 @@ router.get('/:username', async (req, res) => {
         const result = await client.query(
             'SELECT * FROM users WHERE username = $1',
             [username]
+        );
+        client.release();
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        } else {
+            res.json(result.rows[0]);
+        }
+    } catch (error) {
+        console.error('Error getting user:', error);
+        res.status(500).json({ error: 'Failed to get user' });
+    }
+});
+
+// Get username from user_id
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Retrieve the user from the database
+        const client = await pool.connect();
+        const result = await client.query(
+            'SELECT username FROM users WHERE user_id = $1',
+            [id]
         );
         client.release();
 

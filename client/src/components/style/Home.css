@@ -79,6 +79,12 @@
   color: #999;
 }
 
+.App-date-form .form-control {
+  background-color: #313640;
+  color: white;
+  border-color: #999;
+}
+
 .App-paragraph {
   font-size: 20px;
 }
