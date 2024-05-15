@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import MovieDateNavbar from './Navbar';
-import { Card, Dropdown } from 'react-bootstrap';
+import { Card, Dropdown, Button } from 'react-bootstrap';
 import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './style/Home.css';
 
-function Calendar() {
+function Dates() {
     const { username } = useParams();
     const [profileUsername, setProfileUsername] = useState(username);
     const [userExists, setUserExists] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
-    const [movies, setMovies] = useState([]);
+    const [dates, setDates] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [isFilterReady, setIsFilterReady] = useState(false);
     const navigate = useNavigate();
@@ -49,6 +49,17 @@ function Calendar() {
         });
     };
 
+    // Format time function (convert SQL time to 12-hour format)
+    const formatTime = (timeString) => {
+        const [hours, minutes] = timeString.split(':');
+        const suffix = hours >= 12 ? 'PM' : 'AM';
+
+        let hours12 = hours % 12;
+        hours12 = hours12 ? hours12 : 12; // 0 should be converted to 12
+
+        return `${hours12}:${minutes} ${suffix}`;
+    };
+    
     // Handle filtering movies
     const handleFilter = (filterOption) => {
         // Deselect the other filter if it's selected
@@ -60,7 +71,7 @@ function Calendar() {
             params.set('filter', newSelectedFilter[0]); // Set the selected filter in the URL
             navigate(`?${params.toString()}`);
         } else {
-            navigate(`/${profileUsername}/calendar`);
+            navigate(`/${profileUsername}/dates`);
         }
 
         setSelectedFilters(newSelectedFilter);
@@ -82,26 +93,26 @@ function Calendar() {
         setProfileUsername(username);
     }, [username]);
 
-    // Get user's calendar
+    // Get user's dates with movie details for movie poster
     useEffect(() => {
-        // Function to get the user's calendar
+        // Function to get the user's dates
         if (isFilterReady) {
-            const getCalendar = async () => {
+            const getDates = async () => {
                 try {
-                    const response = await axios.get('http://localhost:5000/calendar', {
+                    const response = await axios.get('http://localhost:5000/dates', {
                         params: {
                             username: profileUsername,
                             selectedFilters: selectedFilters,
                         },
                     });
-                    setMovies(response.data);
-                    console.log('Success fetching user calendar:', response.data);
+                    setDates(response.data);
+                    console.log('Success fetching user dates:', response.data);
                 } catch (error) {
-                    console.error('Error fetching user calendar:', error);
+                    console.error('Error fetching user dates:', error);
                 }
             };
 
-            getCalendar();
+            getDates();
         }
     }, [profileUsername, selectedFilters, isFilterReady]);
 
@@ -141,10 +152,8 @@ function Calendar() {
                     <div className="d-flex align-items-center">
                         <header className="App-header">
                             <br></br>
-                            {isCurrentUser ? <h1>My Calendar</h1> : <h1>{profileUsername}'s Calendar</h1>}
-                            {movies.length === 0 && <br></br>}
-                            {movies.length === 0 ? <h3>No movies in the calendar</h3> : null}
-                            {movies.length > 0 && <div className="d-flex">
+                            {isCurrentUser ? <h1>My Dates</h1> : <h1>{profileUsername}'s Dates</h1>}
+                            <div className="d-flex">
                                 <Dropdown>
                                     <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
                                         Filter
@@ -154,13 +163,13 @@ function Calendar() {
                                             <div className="d-flex align-items-center">
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedFilters.includes('upcoming')}
-                                                    onChange={() => handleFilter('upcoming')}
+                                                    checked={selectedFilters.includes('me')}
+                                                    onChange={() => handleFilter('me')}
                                                     onClick={(e) => e.stopPropagation()} // Stop propagation here
                                                     className='mr-2'
                                                 />
-                                                <label className="filter-checkbox-text" onClick={() => handleFilter('upcoming')}>
-                                                    Upcoming
+                                                <label className="filter-checkbox-text" onClick={() => handleFilter('me')}>
+                                                    Created By Me
                                                 </label>
                                             </div>
                                         </Dropdown.Item>
@@ -168,40 +177,52 @@ function Calendar() {
                                             <div className="d-flex align-items-center">
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedFilters.includes('released')}
-                                                    onChange={() => handleFilter('released')}
+                                                    checked={selectedFilters.includes('others')}
+                                                    onChange={() => handleFilter('others')}
                                                     onClick={(e) => e.stopPropagation()} // Stop propagation here
                                                     className='mr-2'
                                                 />
-                                                <label className="filter-checkbox-text" onClick={() => handleFilter('released')}>
-                                                    Released
+                                                <label className="filter-checkbox-text" onClick={() => handleFilter('others')}>
+                                                    Created By Others
                                                 </label>
                                             </div>
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
-                            </div>}
+                            </div>
+                            {dates.length === 0 && <br></br>}
+                            {dates.length === 0 ? <h3>No dates yet. To add a date, visit a movie page and fill out the form.</h3> : null}
                             <br></br>
                             <div className="Movies-grid">
-                                {movies.map(movie => (
-                                    <Card key={movie.movie_id} className="Movies-card" style={{ width: '15rem' }}>
-                                        <Link to={`/movies/${movie.movie_id}`}>
-                                            {movie.poster_path ? (
-                                                <Card.Img variant="top" className="card-img" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
-                                            ) : (
-                                                <Card.Img variant="top" className="card-img" src={'https://via.placeholder.com/446x669.png?text=Poster+Not+Available'} />
-                                            )}
-                                        </Link>
-                                        <Card.Body>
-                                            <Card.Text className="card-text">
-                                                <b>{movie.title}</b>
-                                                <br />
-                                                <i>{formatDate(movie.release_date)}</i>
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
+                                {dates.map(date => (
+                                    <div key={date.date_id}>
+                                        <Link to={`/movies/${date.movie_id}`}>
+                                            <Card className="Movies-card" style={{ width: '15rem' }}>
+                                                <Card.Img variant="top" className="card-img" src={'https://image.tmdb.org/t/p/w500' + date.poster_path} />
+                                                <Card.Body>
+                                                    <div className="text-center">
+                                                        <h5>{date.title}</h5>
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Link>                                        
+                                        <h5><u>Date</u>:</h5>
+                                        <h6><i>{formatDate(date.date)}</i></h6>
+
+                                        <h5><u>Time</u>:</h5>
+                                        <h6><i>{date.time ? formatTime(date.time) : 'Not specified'}</i></h6>
+
+                                        <h5><u>Theater</u>:</h5>
+                                        <h6><i>{date.theater || 'Not specified'}</i></h6>
+
+                                        <h5><u>Invited Users:</u></h5>
+                                        <h6><i>{date.invited_users.join(', ') || 'None'}</i></h6>
+
+                                        <Button className='App-button' style={{ marginBottom: '25px' }}>Manage</Button>
+                                    </div>
                                 ))}
                             </div>
+                            <br></br>
                         </header>
                     </div>
                 </div>    
@@ -210,4 +231,4 @@ function Calendar() {
     }
 }
 
-export default Calendar;
+export default Dates;

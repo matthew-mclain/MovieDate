@@ -4,12 +4,15 @@ import { Card, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './style/Movies.css';
+import DateModal from './AddDateModal';
 
 function MovieDetail() {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [movieInCalendar, setMovieInCalendar] = useState(false);
     const [hovered, setHovered] = useState(false);
+    const [showDateModal, setShowDateModal] = useState(false);
+
     // Format date function
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -94,6 +97,12 @@ function MovieDetail() {
         checkMovieInCalendar();
     }, [id]);
 
+     // Event handler to toggle modal visibility
+     const toggleDateModal = () => {
+        setShowDateModal(!showDateModal);
+    };
+
+
     return (
         <div className="App">
             <MovieDateNavbar />
@@ -122,6 +131,10 @@ function MovieDetail() {
                                     >
                                         {movieInCalendar ? (hovered ? 'Remove From Calendar' : 'In Calendar') : 'Add to Calendar'}
                                     </Button>
+                                    <div>
+                                    <Button className="App-button" onClick={toggleDateModal}>Plan Date</Button>
+                                    <DateModal show={showDateModal} onHide={toggleDateModal} movieId={id}/>
+                                    </div>
                                     </div>
                                 </Card.Body>
                             </Card>

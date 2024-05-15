@@ -33,6 +33,10 @@ function MovieDateNavbar() {
         navigate(`/${username}/calendar`);
     }
 
+    const handleDatesClick = () => {
+        navigate(`/${username}/dates`);
+    }
+
     const handleSearchInputChange = (e) => {
         setSearchQuery(e.target.value);
         if (!e.target.value) {
@@ -84,6 +88,7 @@ function MovieDateNavbar() {
                         <Nav className="me-auto">
                             <Nav.Link onClick={handleMoviesClick} style={{ color: 'white' }}>Movies</Nav.Link>
                             <Nav.Link onClick={handleCalendarClick} style={{ color: 'white' }}>My Calendar</Nav.Link>
+                            <Nav.Link onClick={handleDatesClick} style={{ color: 'white' }}>My Dates</Nav.Link>
                         </Nav>
                     )}
                     {localStorage.getItem('token') && (

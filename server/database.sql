@@ -42,19 +42,19 @@ CREATE TABLE user_friends (
 
 CREATE TABLE dates (
     date_id SERIAL PRIMARY KEY,
-    date_movie_id INTEGER REFERENCES movies(movie_id) ON DELETE CASCADE,
-    date_user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-    date_date DATE NOT NULL,
-    date_time TIME,
-    date_location VARCHAR(100),
-    date_invited_users INTEGER[]
+    movie_id INTEGER REFERENCES movies(movie_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    time TIME,
+    theater VARCHAR(100),
+    invited_users INTEGER[]
 );
 
-CREATE TABLE user_dates (
-    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-    date_id INTEGER REFERENCES dates(date_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, date_id)
-);
+-- CREATE TABLE user_dates (
+--     user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+--     date_id INTEGER REFERENCES dates(date_id) ON DELETE CASCADE,
+--     PRIMARY KEY (user_id, date_id)
+-- );
 
 CREATE INDEX username_index ON users (username);
 CREATE INDEX title_index ON movies (title);

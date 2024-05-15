@@ -10,6 +10,7 @@ import Profile from './components/Profile';
 import Movies from './components/Movies';
 import Calendar from './components/Calendar';
 import MovieDetail from './components/MovieDetail';
+import Dates from './components/Dates';
 
 function App() {
   useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/movies" element={<Movies />} />
         <Route path="/movies/:id" element={<MovieDetail />} />
         <Route path="/:username/calendar" element={<Calendar />} />
+        <Route path="/:username/dates" element={<Dates />} />
       </Routes>
     </Router>
   );
