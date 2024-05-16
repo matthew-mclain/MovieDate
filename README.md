@@ -1,6 +1,8 @@
 <h1 style="display: flex; align-items: center;">
-  <img src="client\src\components\icons\popcorn.svg" alt="MovieDate Logo" width="40" height="40"> MovieDate
+  <img src="client\src\components\icons\popcorn.svg" alt="MovieDate Logo" width="50" height="50" style="margin-right: 10px;"> 
+  <span style="flex: 1;">MovieDate</span>
 </h1>
+
 MovieDate is a comprehensive movie planning application designed to simplfy the process of keeping track of upcoming movies you want to watch, and planning movie outings with friends.
 
 ## Features
