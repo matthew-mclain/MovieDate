@@ -51,6 +51,30 @@ router.put('/edit', async (req, res) => {
     }
 });
 
+// Delete date
+router.delete('/delete', async (req, res) => {
+    const { dateId } = req.body;
+
+    try {
+        await pool.query('DELETE FROM dates WHERE date_id = $1', [dateId]);
+        res.json({ message: 'Date deleted' });
+    } catch (error) {
+        console.error('Error deleting date:', error);
+        res.status(500).json({ error: 'Failed to delete date' });
+    }
+});
+
+// Delete dates that are in the past
+router.delete('/delete_old', async (req, res) => {
+    try {
+        await pool.query('DELETE FROM dates WHERE date < CURRENT_DATE');
+        res.json({ message: 'Old dates deleted' });
+    } catch (error) {
+        console.error('Error deleting old dates:', error);
+        res.status(500).json({ error: 'Failed to delete old dates' });
+    }
+});
+
 // Get dates for a user including if user_id is in invited_users, with movie poster
 router.get('/', async (req, res) => {
     const { username, selectedFilters } = req.query;

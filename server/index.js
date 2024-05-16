@@ -36,11 +36,22 @@ const deleteMovies = async () => {
     }
 }
 
+// Delete dates if date is in the past
+const deleteDates = async () => {
+    try {
+        const response = await axios.delete('http://localhost:5000/dates/delete_old');
+        console.log("Old dates deleted successfully.");
+    } catch (error) {
+        console.error("Failed to update dates table:", error.message);
+    }
+}
+
 // Start the server
 app.listen(5000, async () => {
     try {
         await updateMovies(); // Update movies table
         await deleteMovies(); // Delete old movies
+        await deleteDates(); // Delete old dates
         console.log('Server is running on port 5000');
     } catch (error) {
         console.error("Failed to update movies table:", error.message);

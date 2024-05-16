@@ -41,6 +41,11 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
     }, []);
 
     const handleDateChange = (event) => {
+        // If date is in the past, prevent user from selecting it
+        if (event.target.value < new Date().toISOString().split('T')[0]) {
+            alert('Please select a future date.');
+            return;
+        }
         setDate(event.target.value);
     };
 
@@ -112,6 +117,27 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
         setShowUserListModal(false);
     }
 
+    const handleDelete = async () => {
+        try {
+            const response = await axios.delete('http://localhost:5000/dates/delete', {
+                data: {
+                    dateId: dateId
+                }
+            });
+            console.log(response.data);
+
+            // Refresh dates
+            window.location.reload();
+        } catch (error) {
+            console.error('Error deleting date:', error);
+            // Show error alert
+            setShowAlert(true);
+            setAlertVariant('danger');
+            setAlertMessage('Error deleting date. Please try again.');
+        }
+        onHide(); // Close modal
+    }
+
     return (
         <>
             <Modal show={show} onHide={onHide} style={{ filter: showUserListModal ? 'blur(5px)' : 'none'}}>
@@ -141,9 +167,14 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
                                 <i>To add friends here, go to their profile and follow them first.</i>
                             </Form.Group>
                     </Modal.Body>
-                    <Modal.Footer>
+                    <Modal.Footer style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        {submitButtonTitle === 'Update' && 
+                            (<Button className="App-button" onClick={handleDelete}>
+                                Delete
+                            </Button>)
+                        }
                         <Button onClick={handleSubmit} className="App-button">
-                                {submitButtonTitle}
+                            {submitButtonTitle}
                         </Button>
                     </Modal.Footer>
                 </Form>
