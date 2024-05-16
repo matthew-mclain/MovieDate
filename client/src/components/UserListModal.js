@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './style/Modal.css';
 
-function UserListModal({ show, onHide, users, title, onUserSelection, isProfileModal }) {
+function UserListModal({ show, onHide, users, invitedUsers, title, onUserSelection, isProfileModal }) {
     const [selectedUsernames, setSelectedUsernames] = useState([]);
+
+    useEffect(() => {
+        setSelectedUsernames(invitedUsers);
+    }, [invitedUsers]);
 
     const handleUsernameClick = () => {
         onHide();
@@ -56,7 +60,10 @@ function UserListModal({ show, onHide, users, title, onUserSelection, isProfileM
         return (
             <Modal show={show} onHide={onHide} className=".modal-backdrop">
                 <Modal.Header closeButton>
-                    <Modal.Title>{title}</Modal.Title>
+                    <div>
+                        <Modal.Title>{title}</Modal.Title>
+                        <i>Select/Deselect a user by clicking on their username</i>
+                    </div>
                 </Modal.Header>
                 <Modal.Body>
                     {users && users.length > 0 ? (

@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import './style/Modal.css';
 import UserListModal from './UserListModal';
 
-function AddDateModal({ show, onHide, movieId }) {
+function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, theaterValue, invitedUsersValue, title, userButtonTitle, submitButtonTitle}) {
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [theater, setTheater] = useState('');
     const [invitedUsers, setInvitedUsers] = useState([]);
     const [following, setFollowing] = useState([]);
     const [showUserListModal, setShowUserListModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertVariant, setAlertVariant] = useState('success');
+    const [alertMessage, setAlertMessage] = useState('');
+
+    useEffect(() => {
+        if (dateValue) setDate(dateValue.substring(0, 10)); // Extract date from datetime string
+        if (timeValue) setTime(timeValue); else setTime('');
+        if (theaterValue) setTheater(theaterValue); else setTheater('');
+        if (invitedUsersValue) setInvitedUsers(invitedUsersValue); else setInvitedUsers([]);
+    }, [dateValue, timeValue, theaterValue, invitedUsersValue]);
 
     // Get following users
     useEffect(() => {
@@ -48,21 +58,47 @@ function AddDateModal({ show, onHide, movieId }) {
             // Get username from localStorage
             const username = localStorage.getItem('username');
 
-            // Send request to add date
-            const response = await axios.post('http://localhost:5000/dates/add', {
-                movieId: movieId,
-                username: username,
-                date: date,
-                time: time,
-                theater: theater,
-                invitedUsers: invitedUsers
-            });
+            // Send request to add/update date
+            if (dateId) {
+                // Update date
+                const response = await axios.put('http://localhost:5000/dates/edit', {
+                    dateId: dateId,
+                    date: date,
+                    time: time,
+                    theater: theater,
+                    invitedUsers: invitedUsers
+                });
 
-            console.log(response.data);
+                console.log(response.data);
+
+                // Refresh dates
+                window.location.reload();
+            } else {
+                // Add date
+                const response = await axios.post('http://localhost:5000/dates/add', {
+                    movieId: movieId,
+                    username: username,
+                    date: date,
+                    time: time,
+                    theater: theater,
+                    invitedUsers: invitedUsers
+                });
+
+                console.log(response.data);
+
+                // Show success alert
+                setShowAlert(true);
+                setAlertVariant('success');
+                setAlertMessage('Date added successfully.');
+            }
 
             onHide(); // Close modal
         } catch (error) {
             console.error('Error adding date:', error);
+            // Show error alert
+            setShowAlert(true);
+            setAlertVariant('danger');
+            setAlertMessage('Error adding date. Please try again.');
         }
     };
 
@@ -72,6 +108,7 @@ function AddDateModal({ show, onHide, movieId }) {
 
     const handleUserSelection = (selectedUsernames) => {
         setInvitedUsers(selectedUsernames);
+        console.log('invitedUsers:', invitedUsers);
         setShowUserListModal(false);
     }
 
@@ -80,7 +117,7 @@ function AddDateModal({ show, onHide, movieId }) {
             <Modal show={show} onHide={onHide} style={{ filter: showUserListModal ? 'blur(5px)' : 'none'}}>
                 <Form className='App-date-form' onSubmit={handleSubmit}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Add Date</Modal.Title>
+                        <Modal.Title>{title}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                             <Form.Group controlId="date">
@@ -99,13 +136,14 @@ function AddDateModal({ show, onHide, movieId }) {
                             <Form.Group controlId="invitedUsers">
                             <Form.Label>Want to invite friends?</Form.Label><br></br>
                                 <Button className="App-button" onClick={handleAddUsersClick}>
-                                    Add User(s)
-                                </Button>
+                                    {userButtonTitle}
+                                </Button><br></br>
+                                <i>To add friends here, go to their profile and follow them first.</i>
                             </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={handleSubmit} className="App-button">
-                                Add Date
+                                {submitButtonTitle}
                         </Button>
                     </Modal.Footer>
                 </Form>
@@ -113,11 +151,16 @@ function AddDateModal({ show, onHide, movieId }) {
             <UserListModal 
                 show={showUserListModal} 
                 onHide={() => setShowUserListModal(false)}
-                users={following} 
+                users={following}
+                invitedUsers={invitedUsers}
                 title="Invite Friends"
                 onUserSelection={handleUserSelection}
                 isProfileModal={false}
             />
+            {/* Alert */}
+            <Alert show={showAlert} variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+                <h5>{alertMessage}</h5>
+            </Alert>
         </>
     );
 }

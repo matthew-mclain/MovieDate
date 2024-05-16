@@ -133,7 +133,7 @@ function MovieDetail() {
                                     </Button>
                                     <div>
                                         <Button className="App-button" onClick={toggleAddDateModal}>Plan Date</Button>
-                                        <AddDateModal show={showAddDateModal} onHide={toggleAddDateModal} movieId={id}/>
+                                        <AddDateModal show={showAddDateModal} onHide={toggleAddDateModal} movieId={id} title={"Add Date"} userButtonTitle={"Add User(s)"} submitButtonTitle={"Add Date"}/>
                                     </div>
                                     </div>
                                 </Card.Body>

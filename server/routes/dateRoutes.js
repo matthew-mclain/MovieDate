@@ -32,6 +32,25 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// Edit date
+router.put('/edit', async (req, res) => {
+    const { dateId, date, time, theater, invitedUsers } = req.body;
+
+    // Check if time is empty and set it to null
+    const timeValue = time === '' ? null : time;
+
+    try {
+        const updatedDate = await pool.query(
+            'UPDATE dates SET date = $1, time = $2, theater = $3, invited_users = $4 WHERE date_id = $5 RETURNING *',
+            [date, timeValue, theater, invitedUsers, dateId]
+        );
+        res.json(updatedDate.rows[0]);
+    } catch (error) {
+        console.error('Error updating date:', error);
+        res.status(500).json({ error: 'Failed to update date' });
+    }
+});
+
 // Get dates for a user including if user_id is in invited_users, with movie poster
 router.get('/', async (req, res) => {
     const { username, selectedFilters } = req.query;
@@ -57,7 +76,7 @@ router.get('/', async (req, res) => {
             query += ' WHERE user_id = (SELECT user_id FROM users WHERE username = $1) OR $1 = ANY(dates.invited_users)';
         }
 
-        const dates = await pool.query(query, [username]);
+        const dates = await pool.query(query + 'ORDER BY date', [username]);
         res.json(dates.rows);
         console.log(query);
         console.log(dates.rows);

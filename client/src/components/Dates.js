@@ -4,6 +4,7 @@ import { Card, Dropdown, Button } from 'react-bootstrap';
 import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './style/Home.css';
+import ManageDateModal from './ManageDateModal';
 
 function Dates() {
     const { username } = useParams();
@@ -13,6 +14,8 @@ function Dates() {
     const [dates, setDates] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [isFilterReady, setIsFilterReady] = useState(false);
+    const [showManageDateModal, setShowManageDateModal] = useState(false);
+    const [manageDate, setManageDate] = useState({});
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -116,6 +119,12 @@ function Dates() {
         }
     }, [profileUsername, selectedFilters, isFilterReady]);
 
+    // Function to open the manage modal with the selected date
+    const handleManageDate = (date) => {
+        setManageDate(date);
+        setShowManageDateModal(true);
+    };
+
     if (isLoading) {
         return (
             <div className="App">
@@ -206,7 +215,8 @@ function Dates() {
                                                 </Card.Body>
                                             </Card>
                                         </Link>
-                                        <Button className='App-button' style={{ marginBottom: '25px' }}>Manage</Button>                                        
+                                        {!date.invited_users.includes(storedUsername) && <Button className='App-button' style={{ marginBottom: '25px' }} onClick={() => handleManageDate(date)}>Manage</Button>}
+                                        {date.invited_users.includes(storedUsername) && <Button variant="outline-danger" className="me-4" style={{ marginBottom: '25px' }}>Invited</Button>}                                                                        
                                         <h5><u>Date</u>:</h5>
                                         <h6><i>{formatDate(date.date)}</i></h6>
 
@@ -224,7 +234,9 @@ function Dates() {
                             <br></br>
                         </header>
                     </div>
-                </div>    
+                </div>
+                {/* Manage Date Modal */}
+                <ManageDateModal show={showManageDateModal} date_obj={manageDate} onHide={() => setShowManageDateModal(false)} />
             </div>
         );
     }
