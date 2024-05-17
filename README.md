@@ -20,7 +20,7 @@ Connect with friends and fellow movie buffs by following other users on MovieDat
 
 ### What You Need:
    - Node.js and npm installed on your machine
-   - API key for TMDB
+   - API key for The Movie Database (TMDB)
 
 ### Installation:
    - Clone this repository: <code>git clone https://github.com/matthew-mclain/MovieDate</code>
