@@ -25,6 +25,7 @@ Connect with friends and fellow movie buffs by following other users on MovieDat
 ### Installation:
    - Clone this repository: <code>git clone https://github.com/matthew-mclain/MovieDate</code>
    - Navigate to the project directory: <code>cd MovieDate</code>
+   - Navigate to the server directory: <code>cd server</code>
    - Install dependencies: <code>npm install</code>
    - Obtain API key for TMDB here: https://developer.themoviedb.org/reference/intro/getting-started
    - Create a .env file in the root directory of the project: <code>touch .env</code>
@@ -34,7 +35,7 @@ Connect with friends and fellow movie buffs by following other users on MovieDat
        <code>TMDB_ACCESS_TOKEN={your_tmdb_access_token}</code><br>
 
 ### Starting the Server
-  - Navigate to the server directory: <code>cd server</code>
+  - Make sure you are in the server directory
   - Start the server: node index.js
 
 ### Starting the Client
