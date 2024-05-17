@@ -71,7 +71,7 @@ function Movies() {
         if (isFilterReady) {
             const fetchMovies = async () => {
                 try {
-                    const response = await axios.get('http://localhost:5000/movies/', {
+                    const response = await axios.get('http://localhost:8000/movies/', {
                         params: {
                             sortBy,
                             sortOrder,

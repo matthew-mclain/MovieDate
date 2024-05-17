@@ -27,7 +27,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
         const getFollowing = async () => {
             try {
                 const username = localStorage.getItem('username');
-                const response = await axios.get(`http://localhost:5000/users/following`, {
+                const response = await axios.get(`http://localhost:8000/users/following`, {
                     params: {
                         username: username
                     }
@@ -66,7 +66,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
             // Send request to add/update date
             if (dateId) {
                 // Update date
-                const response = await axios.put('http://localhost:5000/dates/edit', {
+                const response = await axios.put('http://localhost:8000/dates/edit', {
                     dateId: dateId,
                     date: date,
                     time: time,
@@ -80,7 +80,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
                 window.location.reload();
             } else {
                 // Add date
-                const response = await axios.post('http://localhost:5000/dates/add', {
+                const response = await axios.post('http://localhost:8000/dates/add', {
                     movieId: movieId,
                     username: username,
                     date: date,
@@ -119,7 +119,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
 
     const handleDelete = async () => {
         try {
-            const response = await axios.delete('http://localhost:5000/dates/delete', {
+            const response = await axios.delete('http://localhost:8000/dates/delete', {
                 data: {
                     dateId: dateId
                 }

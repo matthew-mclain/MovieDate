@@ -23,7 +23,7 @@ function Calendar() {
     useEffect(() => {
         const checkUserExists = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/users/${profileUsername}`);
+                const response = await axios.get(`http://localhost:8000/users/${profileUsername}`);
                 console.log('User:', response.data);
             } catch (error) {
                 console.error('User does not exist:', error);
@@ -88,7 +88,7 @@ function Calendar() {
         if (isFilterReady) {
             const getCalendar = async () => {
                 try {
-                    const response = await axios.get('http://localhost:5000/calendar', {
+                    const response = await axios.get('http://localhost:8000/calendar', {
                         params: {
                             username: profileUsername,
                             selectedFilters: selectedFilters,

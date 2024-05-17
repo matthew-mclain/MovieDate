@@ -19,7 +19,7 @@ app.use('/dates', require('./routes/dateRoutes'));
 // Update the database with upcoming movies
 const updateMovies = async () => {
     try {
-        const response = await axios.post('http://localhost:5000/movies/populate');
+        const response = await axios.post('http://localhost:8000/movies/populate');
         console.log("Movies table updated successfully.", response.data.length, "movies added.");
     } catch (error) {
         console.error("Failed to update movies table:", error.message);
@@ -29,7 +29,7 @@ const updateMovies = async () => {
 // Delete movies if release date is six months old
 const deleteMovies = async () => {
     try {
-        const response = await axios.delete('http://localhost:5000/movies/delete');
+        const response = await axios.delete('http://localhost:8000/movies/delete');
         console.log("Old movies deleted successfully.");
     } catch (error) {
         console.error("Failed to update movies table:", error.message);
@@ -39,7 +39,7 @@ const deleteMovies = async () => {
 // Delete dates if date is in the past
 const deleteDates = async () => {
     try {
-        const response = await axios.delete('http://localhost:5000/dates/delete_old');
+        const response = await axios.delete('http://localhost:8000/dates/delete_old');
         console.log("Old dates deleted successfully.");
     } catch (error) {
         console.error("Failed to update dates table:", error.message);
@@ -47,12 +47,12 @@ const deleteDates = async () => {
 }
 
 // Start the server
-app.listen(5000, async () => {
+app.listen(8000, async () => {
     try {
         await updateMovies(); // Update movies table
         await deleteMovies(); // Delete old movies
         await deleteDates(); // Delete old dates
-        console.log('Server is running on port 5000');
+        console.log('Server is running on port 8000');
     } catch (error) {
         console.error("Failed to update movies table:", error.message);
     }
