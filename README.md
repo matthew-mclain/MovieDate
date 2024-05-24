@@ -36,7 +36,7 @@ Connect with friends and fellow movie buffs by following other users on MovieDat
 
 ### Starting the Server
   - Make sure you are in the server directory
-  - Start the server: node index.js
+  - Start the server: <code>node index.js</code>
 
 ### Starting the Client
   - Open a new terminal window
