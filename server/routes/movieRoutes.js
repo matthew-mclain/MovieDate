@@ -172,7 +172,7 @@ router.delete('/delete', async (req, res) => {
         const threeMonthsAgoDate = threeMonthsAgo.toISOString().split('T')[0]; // Get date three months ago in YYYY-MM-DD format
 
         const client = await pool.connect();
-        await client.query('DELETE FROM movies WHERE release_date < $1', [sixMonthsAgoDate]);
+        await client.query('DELETE FROM movies WHERE release_date < $1', [threeMonthsAgoDate]);
         client.release();
         res.json({ message: 'Movies released over a three months ago have been deleted' });
     } catch (error) {
