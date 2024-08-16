@@ -164,17 +164,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Delete movies if release date is six months old
+// Delete movies if release date is three months old
 router.delete('/delete', async (req, res) => {
     try {
-        const sixMonthsAgo = new Date();
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-        const sixMonthsAgoDate = sixMonthsAgo.toISOString().split('T')[0]; // Get date six months ago in YYYY-MM-DD format
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+        const threeMonthsAgoDate = threeMonthsAgo.toISOString().split('T')[0]; // Get date three months ago in YYYY-MM-DD format
 
         const client = await pool.connect();
         await client.query('DELETE FROM movies WHERE release_date < $1', [sixMonthsAgoDate]);
         client.release();
-        res.json({ message: 'Movies released over a six months ago have been deleted' });
+        res.json({ message: 'Movies released over a three months ago have been deleted' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete old movies from the database: ' + error.message });
     }
