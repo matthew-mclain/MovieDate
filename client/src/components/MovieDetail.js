@@ -34,7 +34,7 @@ function MovieDetail() {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/movies/${id}`);
+                const response = await axios.get(`http://backend:8000/movies/${id}`);
                 setMovie(response.data);
             } catch (error) {
                 console.error('Error fetching movie:', error);
@@ -50,7 +50,7 @@ function MovieDetail() {
             // Get username from localStorage
             const username = localStorage.getItem('username');
 
-            const response = await axios.post('http://localhost:8000/calendar/add', {
+            const response = await axios.post('http://backend:8000/calendar/add', {
                 username: username,
                 movieId: movie.movie_id,
             });
@@ -67,7 +67,7 @@ function MovieDetail() {
             // Get username from localStorage
             const username = localStorage.getItem('username');
 
-            const response = await axios.delete('http://localhost:8000/calendar/delete', {
+            const response = await axios.delete('http://backend:8000/calendar/delete', {
                 data: {
                     username: username,
                     movieId: movie.movie_id,
@@ -85,7 +85,7 @@ function MovieDetail() {
         const checkMovieInCalendar = async () => {
             try {
                 const username = localStorage.getItem('username');
-                const response = await axios.get(`http://localhost:8000/calendar?username=${username}`);
+                const response = await axios.get(`http://backend:8000/calendar?username=${username}`);
                 const isInCalendar = response.data.some(movie => movie.movie_id === parseInt(id));
                 setMovieInCalendar(isInCalendar);
                 console.log('Movie is in calendar:', isInCalendar);

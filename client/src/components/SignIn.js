@@ -27,7 +27,7 @@ function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/users/signin', {
+            const response = await axios.post('http://backend:8000/users/signin', {
                 username: formData.username,
                 password: formData.password
             });

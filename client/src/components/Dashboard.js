@@ -32,7 +32,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchUpcomingMovies = async () => {
           try {
-            const response = await axios.get('http://localhost:8000/movies/upcoming');
+            const response = await axios.get('http://backend:8000/movies/upcoming');
             const slicedUpcomingMovies = response.data.slice(0, 5).map(movie => ({
                 ...movie,
                 release_date: formatDate(movie.release_date),
@@ -50,7 +50,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchNowPlayingMovies = async () => {
           try {
-            const response = await axios.get('http://localhost:8000/movies/now_playing');
+            const response = await axios.get('http://backend:8000/movies/now_playing');
             const slicedNowPlayingMovies = response.data.slice(0, 5).map(movie => ({
                 ...movie,
                 release_date: formatDate(movie.release_date),

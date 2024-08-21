@@ -47,7 +47,7 @@ function MovieDateNavbar() {
     const handleSearchFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8000/search?query=${searchQuery}`);
+            const response = await axios.get(`http://backend:8000/search?query=${searchQuery}`);
             setSearchResults(response.data);
             console.log('Search results:', response.data);
         } catch (error) {

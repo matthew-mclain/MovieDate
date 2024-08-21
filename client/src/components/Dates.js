@@ -26,7 +26,7 @@ function Dates() {
     useEffect(() => {
         const checkUserExists = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/users/${profileUsername}`);
+                const response = await axios.get(`http://backend:8000/users/${profileUsername}`);
                 console.log('User:', response.data);
             } catch (error) {
                 console.error('User does not exist:', error);
@@ -102,7 +102,7 @@ function Dates() {
         if (isFilterReady) {
             const getDates = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8000/dates', {
+                    const response = await axios.get('http://backend:8000/dates', {
                         params: {
                             username: profileUsername,
                             selectedFilters: selectedFilters,

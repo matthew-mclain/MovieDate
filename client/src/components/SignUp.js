@@ -33,7 +33,7 @@ function SignUp() {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:8000/users/signup', {
+            const response = await axios.post('http://backend:8000/users/signup', {
                 email: formData.email,
                 username: formData.username,
                 password: formData.password

@@ -36,7 +36,7 @@ function Profile() {
     useEffect(() => {
         const checkUserExists = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/users/${profileUsername}`);
+                const response = await axios.get(`http://backend:8000/users/${profileUsername}`);
                 console.log('User:', response.data);
             } catch (error) {
                 console.error('User does not exist:', error);
@@ -58,7 +58,7 @@ function Profile() {
         // Function to get the user's calendar
         const getCalendar = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/calendar', {
+                const response = await axios.get('http://backend:8000/calendar', {
                     params: {
                         username: profileUsername,
                     },
@@ -76,7 +76,7 @@ function Profile() {
     // Follow user (add to user_friends table)
     const followUser = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/users/follow', {
+            const response = await axios.post('http://backend:8000/users/follow', {
                 username: storedUsername,
                 friendUsername: profileUsername,
             });
@@ -90,7 +90,7 @@ function Profile() {
     // Unfollow user (remove from user_friends table)
     const unfollowUser = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/users/unfollow', {
+            const response = await axios.post('http://backend:8000/users/unfollow', {
                 username: storedUsername,
                 friendUsername: profileUsername,
             });
@@ -105,7 +105,7 @@ function Profile() {
     useEffect(() => {
         const getFollowing = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/users/following', {
+                const response = await axios.get('http://backend:8000/users/following', {
                     params: {
                         username: profileUsername,
                     },
@@ -122,7 +122,7 @@ function Profile() {
     useEffect(() => {
         const getFollowers = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/users/followers', {
+                const response = await axios.get('http://backend:8000/users/followers', {
                     params: {
                         username: profileUsername,
                     },
@@ -138,7 +138,7 @@ function Profile() {
     // Check if the current user is following the profile user
     const checkFollowingStatus = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/users/is_following', {
+            const response = await axios.get('http://backend:8000/users/is_following', {
                 params: {
                     username: storedUsername,
                     friendUsername: profileUsername,
