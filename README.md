@@ -18,27 +18,5 @@ Connect with friends and fellow movie buffs by following other users on MovieDat
 
 ## Usage
 
-### What You Need:
-   - Node.js and npm installed on your machine
-   - API key for The Movie Database (TMDB)
-
-### Installation:
-   - Clone this repository: <code>git clone https://github.com/matthew-mclain/MovieDate</code>
-   - Navigate to the project directory: <code>cd MovieDate</code>
-   - Navigate to the server directory: <code>cd server</code>
-   - Install dependencies: <code>npm install</code>
-   - Obtain API key for TMDB here: https://developer.themoviedb.org/reference/intro/getting-started
-   - Create a .env file in the root directory of the project: <code>touch .env</code>
-   - Inside the .env file, add the following information:<br>
-       <code>TMDB_BASE_URL=https://api.themoviedb.org/3</code><br>
-       <code>TMDB_API_KEY={your_tmdb_api_key}</code><br>
-       <code>TMDB_ACCESS_TOKEN={your_tmdb_access_token}</code><br>
-
-### Starting the Server
-  - Make sure you are in the server directory
-  - Start the server: <code>node index.js</code>
-
-### Starting the Client
-  - Open a new terminal window
-  - Navigate to the client directory: <code>cd client</code>
-  - Start the client: <code>npm start</code>
+### Live Demo
+You can access the live application [here](http://18.222.175.238:3000/)
