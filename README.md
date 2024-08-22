@@ -15,6 +15,8 @@ Keep track of upcoming releases you wish to see by adding them to your personali
 ### Follow Other Users and Schedule Movie Dates
 Connect with friends and fellow movie buffs by following other users on MovieDate. Users can view each other's calendars and schedule movie dates with their friends by creating an event and adding friends to the date.
 
+<img src="client\src\components\images\frontend-preview.png">
+
 
 ## Usage
 
