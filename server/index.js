@@ -46,6 +46,9 @@ const deleteDates = async () => {
     }
 }
 
+// Set interval to update database every 24 hours
+const updateInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
 // Start the server
 app.listen(8000, async () => {
     try {
@@ -53,6 +56,13 @@ app.listen(8000, async () => {
         await deleteMovies(); // Delete old movies
         await deleteDates(); // Delete old dates
         console.log('Server is running on port 8000');
+
+        // Set interval to update database every 24 hours
+        setInterval(async () => {
+            await updateMovies(); // Update movies table
+            await deleteMovies(); // Delete old movies
+            await deleteDates(); // Delete old dates
+        }, updateInterval);
     } catch (error) {
         console.error("Failed to update movies table:", error.message);
     }
