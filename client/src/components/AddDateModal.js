@@ -4,6 +4,9 @@ import axios from 'axios';
 import './style/Modal.css';
 import UserListModal from './UserListModal';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, theaterValue, invitedUsersValue, title, userButtonTitle, submitButtonTitle}) {
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
@@ -27,7 +30,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
         const getFollowing = async () => {
             try {
                 const username = localStorage.getItem('username');
-                const response = await axios.get(`http://backend:8000/users/following`, {
+                const response = await axios.get(`${API_BASE_URL}/users/following`, {
                     params: {
                         username: username
                     }
@@ -66,7 +69,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
             // Send request to add/update date
             if (dateId) {
                 // Update date
-                const response = await axios.put('http://backend:8000/dates/edit', {
+                const response = await axios.put(`${API_BASE_URL}/dates/edit`, {
                     dateId: dateId,
                     date: date,
                     time: time,
@@ -80,7 +83,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
                 window.location.reload();
             } else {
                 // Add date
-                const response = await axios.post('http://backend:8000/dates/add', {
+                const response = await axios.post(`${API_BASE_URL}/dates/add`, {
                     movieId: movieId,
                     username: username,
                     date: date,
@@ -119,7 +122,7 @@ function AddDateModal({ show, onHide, dateId, movieId, dateValue, timeValue, the
 
     const handleDelete = async () => {
         try {
-            const response = await axios.delete('http://backend:8000/dates/delete', {
+            const response = await axios.delete(`${API_BASE_URL}/dates/delete`, {
                 data: {
                     dateId: dateId
                 }

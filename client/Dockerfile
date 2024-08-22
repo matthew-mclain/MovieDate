@@ -4,14 +4,14 @@ FROM node:18.16.1 AS build
 # Set the working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json
-COPY client/package*.json ./
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the React code
-COPY client/ .
+COPY . .
 
 # Build the React app
 RUN npm run build

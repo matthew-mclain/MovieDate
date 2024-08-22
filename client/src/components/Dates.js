@@ -6,6 +6,9 @@ import axios from 'axios';
 import './style/Home.css';
 import ManageDateModal from './ManageDateModal';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function Dates() {
     const { username } = useParams();
     const [profileUsername, setProfileUsername] = useState(username);
@@ -26,7 +29,7 @@ function Dates() {
     useEffect(() => {
         const checkUserExists = async () => {
             try {
-                const response = await axios.get(`http://backend:8000/users/${profileUsername}`);
+                const response = await axios.get(`${API_BASE_URL}/users/${profileUsername}`);
                 console.log('User:', response.data);
             } catch (error) {
                 console.error('User does not exist:', error);
@@ -102,7 +105,7 @@ function Dates() {
         if (isFilterReady) {
             const getDates = async () => {
                 try {
-                    const response = await axios.get('http://backend:8000/dates', {
+                    const response = await axios.get(`${API_BASE_URL}/dates`, {
                         params: {
                             username: profileUsername,
                             selectedFilters: selectedFilters,

@@ -6,6 +6,9 @@ import axios from 'axios';
 import './style/Movies.css';
 import AddDateModal from './AddDateModal';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function MovieDetail() {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
@@ -34,7 +37,7 @@ function MovieDetail() {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const response = await axios.get(`http://backend:8000/movies/${id}`);
+                const response = await axios.get(`${API_BASE_URL}/movies/${id}`);
                 setMovie(response.data);
             } catch (error) {
                 console.error('Error fetching movie:', error);
@@ -50,7 +53,7 @@ function MovieDetail() {
             // Get username from localStorage
             const username = localStorage.getItem('username');
 
-            const response = await axios.post('http://backend:8000/calendar/add', {
+            const response = await axios.post(`${API_BASE_URL}/calendar/add`, {
                 username: username,
                 movieId: movie.movie_id,
             });
@@ -67,7 +70,7 @@ function MovieDetail() {
             // Get username from localStorage
             const username = localStorage.getItem('username');
 
-            const response = await axios.delete('http://backend:8000/calendar/delete', {
+            const response = await axios.delete(`${API_BASE_URL}/calendar/delete`, {
                 data: {
                     username: username,
                     movieId: movie.movie_id,
@@ -85,7 +88,7 @@ function MovieDetail() {
         const checkMovieInCalendar = async () => {
             try {
                 const username = localStorage.getItem('username');
-                const response = await axios.get(`http://backend:8000/calendar?username=${username}`);
+                const response = await axios.get(`${API_BASE_URL}/calendar?username=${username}`);
                 const isInCalendar = response.data.some(movie => movie.movie_id === parseInt(id));
                 setMovieInCalendar(isInCalendar);
                 console.log('Movie is in calendar:', isInCalendar);

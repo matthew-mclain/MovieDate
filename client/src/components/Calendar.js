@@ -5,6 +5,9 @@ import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './style/Home.css';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function Calendar() {
     const { username } = useParams();
     const [profileUsername, setProfileUsername] = useState(username);
@@ -23,7 +26,7 @@ function Calendar() {
     useEffect(() => {
         const checkUserExists = async () => {
             try {
-                const response = await axios.get(`http://backend:8000/users/${profileUsername}`);
+                const response = await axios.get(`${API_BASE_URL}/users/${profileUsername}`);
                 console.log('User:', response.data);
             } catch (error) {
                 console.error('User does not exist:', error);
@@ -88,7 +91,7 @@ function Calendar() {
         if (isFilterReady) {
             const getCalendar = async () => {
                 try {
-                    const response = await axios.get('http://backend:8000/calendar', {
+                    const response = await axios.get(`${API_BASE_URL}/calendar`, {
                         params: {
                             username: profileUsername,
                             selectedFilters: selectedFilters,

@@ -7,6 +7,9 @@ import { ReactComponent as SortDescIcon } from './icons/desc.svg';
 import axios from 'axios';
 import './style/Movies.css';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function Movies() {
     const [movies, setMovies] = useState([]);
     const [sortBy, setSortBy] = useState('popularity'); // Default sort by popularity
@@ -71,7 +74,7 @@ function Movies() {
         if (isFilterReady) {
             const fetchMovies = async () => {
                 try {
-                    const response = await axios.get('http://backend:8000/movies/', {
+                    const response = await axios.get(`${API_BASE_URL}/movies/`, {
                         params: {
                             sortBy,
                             sortOrder,

@@ -7,6 +7,9 @@ import './style/Navbar.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function MovieDateNavbar() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
@@ -47,7 +50,7 @@ function MovieDateNavbar() {
     const handleSearchFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`http://backend:8000/search?query=${searchQuery}`);
+            const response = await axios.get(`${API_BASE_URL}/search?query=${searchQuery}`);
             setSearchResults(response.data);
             console.log('Search results:', response.data);
         } catch (error) {

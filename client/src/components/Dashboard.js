@@ -6,6 +6,9 @@ import MovieDateNavbar from './Navbar';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function Dashboard() {
     const [username, setUsername] = useState('');
     const [upcomingMovies, setUpcomingMovies] = useState([]);
@@ -32,7 +35,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchUpcomingMovies = async () => {
           try {
-            const response = await axios.get('http://backend:8000/movies/upcoming');
+            const response = await axios.get(`${API_BASE_URL}/movies/upcoming`);
             const slicedUpcomingMovies = response.data.slice(0, 5).map(movie => ({
                 ...movie,
                 release_date: formatDate(movie.release_date),
@@ -50,7 +53,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchNowPlayingMovies = async () => {
           try {
-            const response = await axios.get('http://backend:8000/movies/now_playing');
+            const response = await axios.get(`${API_BASE_URL}/movies/now_playing`);
             const slicedNowPlayingMovies = response.data.slice(0, 5).map(movie => ({
                 ...movie,
                 release_date: formatDate(movie.release_date),

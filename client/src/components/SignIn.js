@@ -6,6 +6,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 
+// Access environment variable
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function SignIn() {
     const navigate = useNavigate();
 
@@ -27,7 +30,7 @@ function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://backend:8000/users/signin', {
+            const response = await axios.post(`${API_BASE_URL}/users/signin`, {
                 username: formData.username,
                 password: formData.password
             });

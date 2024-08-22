@@ -73,7 +73,11 @@ router.post('/populate', async (req, res) => {
                 await client.query('INSERT INTO movies (movie_id, title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id, title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity]);
             } else {
                 // Movie exists, update its details in the database
-                await client.query('UPDATE movies SET title = $1, original_title = $2, original_language = $3, release_date = $4, genres = $5, overview = $6, runtime = $7, poster_path = $8, backdrop_path = $9, vote_average = $10, vote_count = $11, popularity = $12 WHERE movie_id = $13', [title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity, id]);
+                // Check if movie needs to be updated
+                const existingMovieDetails = existingMovie.rows[0];
+                if (existingMovieDetails.title !== title || existingMovieDetails.original_title !== original_title || existingMovieDetails.original_language !== original_language || existingMovieDetails.release_date !== release_date || existingMovieDetails.genres !== genres || existingMovieDetails.overview !== overview || existingMovieDetails.runtime !== runtime || existingMovieDetails.poster_path !== poster_path || existingMovieDetails.backdrop_path !== backdrop_path || existingMovieDetails.vote_average !== vote_average || existingMovieDetails.vote_count !== vote_count || existingMovieDetails.popularity !== popularity) {
+                    await client.query('UPDATE movies SET title = $1, original_title = $2, original_language = $3, release_date = $4, genres = $5, overview = $6, runtime = $7, poster_path = $8, backdrop_path = $9, vote_average = $10, vote_count = $11, popularity = $12 WHERE movie_id = $13', [title, original_title, original_language, release_date, genres, overview, runtime, poster_path, backdrop_path, vote_average, vote_count, popularity, id]);
+                }
             }
         }));
 
